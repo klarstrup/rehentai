@@ -65,29 +65,18 @@ class ImageViewer extends React.Component {
 
     return (
       <div className={css.ImageViewer}>
-        <div
+        <Link
+          to={{
+            pathname: nextLink,
+            state: this.props.location.state,
+          }}
           style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            lineHeight: 0,
+            backgroundImage: `url(${fileUrl})`,
           }}>
           {(error && error.message) ||
             (loading && !fileUrl && 'Loading') ||
-            (fileUrl
-              ? <Link
-                to={{
-                  pathname: nextLink,
-                  state: this.props.location.state,
-                }}
-                style={{ backgroundImage: `url(${fileUrl})` }} />
-              : 'No image.')}
-        </div>
+            (!!fileUrl || 'No image.')}
+        </Link>
       </div>
     );
   }
