@@ -12,18 +12,64 @@ import cheerio from "cheerio";
 import qs from "qs";
 import _ from "lodash";
 import DataLoader from "dataloader";
+import process from "process";
 
-const fetch = (url, options) =>
-  nodeFetch(url, options).then(
-    res => console.log(`GET ${url} ${res.status}`) || res
-  );
+require("dotenv").config({ path: `${__dirname}/../../.env` });
 
-const galleryFetcher = ({ id, token, page = 0 }) =>
-  fetch(`http://e-hentai.org/g/${id}/${token}/?nw=always&p=${page}`, {
+const globalCookies = {
+  nw: 1,
+  uconfig: "lt_p-to_p-pn_1",
+  s: "582183e83"
+};
+
+const objectToCookieString = object =>
+  _.map(object, (value, key) => `${key}=${value}`).join("; ");
+
+const fetch = (url, options = {}) =>
+  console.log(objectToCookieString(globalCookies)) ||
+  nodeFetch(url, {
+    credentials: "include",
+    ...options,
     headers: {
-      cookie: "nw=1; uconfig=uh_n" // This is needed to avoid the "Offensive For Everyone" screen.
+      cookie: objectToCookieString(globalCookies),
+      ...options.headers
     }
-  }).then(res =>
+  }).then(res => console.log(`GET ${url} ${res.status}`) || res);
+
+const logOnToEH = async (UserName, PassWord) => {
+  const loginResponse = await fetch(
+    `https://forums.e-hentai.org/index.php?act=Login&CODE=01&CookieDate=1`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: qs.stringify({
+        UserName,
+        PassWord,
+        referer: "act=Login&CODE=01&CookieDate=1"
+      })
+    }
+  );
+  // Get cookies for later.
+  loginResponse.headers.getAll("Set-Cookie").forEach(setCookie => {
+    const [key, value] = setCookie.split("; ")[0].split("=", 2);
+    globalCookies[key] = value;
+  });
+
+  const html = await loginResponse.text();
+
+  if (html.indexOf("<p>You are now logged in as:") === -1) {
+    throw new Error("Failed to sign into EH");
+  }
+  return loginResponse;
+};
+
+const { EXHENTAI_USERNAME, EXHENTAI_PASSWORD } = process.env;
+logOnToEH(EXHENTAI_USERNAME, EXHENTAI_PASSWORD).then(res =>
+  console.log("Signed into EH")
+);
+
     res.text().then(html => {
       const $ = cheerio.load(html);
 
