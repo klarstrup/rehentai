@@ -11,6 +11,11 @@
 // ----------------------
 // IMPORTS
 
+/* Node */
+
+// For pre-pending a `<!DOCTYPE html>` stream to the server response
+import { PassThrough } from 'stream';
+
 /* NPM */
 
 // Patch global.`fetch` so that Apollo calls to GraphQL work
@@ -128,8 +133,6 @@ export function createReactHandler(css = [], scripts = [], chunkManifest = {}) {
       await getDataFromTree(components);
     } catch (err) {}
 
-    // Full React HTML render
-    const html = ReactDOMServer.renderToString(components);
 
     // Handle redirects
     if ([301, 302].includes(routeContext.status)) {
@@ -151,22 +154,38 @@ export function createReactHandler(css = [], scripts = [], chunkManifest = {}) {
       ctx.status = routeContext.status;
     }
 
-    // Render the view with our injected React data.  We'll pass in the
+    // Create a HTML stream, to send back to the browser
+    const htmlStream = new PassThrough();
+
+    // Prefix the doctype, so the browser knows to expect HTML5
+    htmlStream.write('<!DOCTYPE html>');
+
+    // Create a stream of the React render. We'll pass in the
     // Helmet component to generate the <head> tag, as well as our Redux
     // store state so that the browser can continue from the server
-    ctx.body = `<!DOCTYPE html>\n${ReactDOMServer.renderToStaticMarkup(
+    const reactStream = ReactDOMServer.renderToStream(
       <Html
-        html={html}
         head={Helmet.rewind()}
         window={{
           webpackManifest: chunkManifest,
           __STATE__: store.getState(),
         }}
         css={css}
-        scripts={scripts} />,
-    )}`;
+        scripts={scripts}>
+        {components}
+      </Html>,
+    );
+
+    // Pipe the React stream to the HTML output
+    reactStream.pipe(htmlStream);
+
+    // Set the return type to `text/html`, and stream the response back to
+    // the client
+    ctx.type = 'text/html';
+    ctx.body = htmlStream;
   };
 }
+
 
 // Run the server
 export default (async function server() {
