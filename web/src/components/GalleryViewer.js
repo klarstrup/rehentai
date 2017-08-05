@@ -124,7 +124,7 @@ class GalleryViewer extends React.Component {
         <footer
           className={css['page-position']}
           style={{ position: 'absolute', right: 0, bottom: 0, left: 0, fontSize: 48, padding: 16 }}>
-          {(imageId && imageId.split('-')[1]) || frontPage.pageNumber}/{total}
+          {(imageId && imageId.split('-')[1]) || frontPage.pageNumber || 1}/{total}
         </footer>
       </section>
     );
