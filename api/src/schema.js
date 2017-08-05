@@ -272,20 +272,6 @@ const galleryLoader = new DataLoader(
     cacheKeyFn: JSON.stringify
   }
 );
-fetch("https://api.e-hentai.org/api.php", {
-  method: "POST",
-  body: JSON.stringify({
-    method: "gdata",
-    gidlist: [
-      [1084084, "95562c906c"],
-      [1053744, "d6853443ca"],
-      [1084084, "95562c906c"]
-    ]
-  })
-})
-  .then(res => res.json())
-  .then(console.log)
-  .catch(console.error);
 
 const galleriesLoader = new DataLoader(queryStrings =>
   Promise.all(queryStrings.map(galleriesFetcher))
