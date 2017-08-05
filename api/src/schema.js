@@ -242,7 +242,8 @@ const galleriesLoader = new DataLoader(queryStrings =>
 const imageLoader = new DataLoader(
   idTokenPairs => Promise.all(idTokenPairs.map(imageFetcher)),
   {
-    cacheKeyFn: JSON.stringify
+    cacheKeyFn: ({ galleryId, token, pageNumber }) =>
+      JSON.stringify({ galleryId, token, pageNumber })
   }
 );
 
