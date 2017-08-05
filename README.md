@@ -7,7 +7,7 @@ React E-Hentai client via GraphQL facade
 yarn install
 ```
 
-## run
+## start
 
 ```sh
 yarn start
