@@ -83,9 +83,9 @@ const galleryFetcher = ({ id, token, page = 0 }) =>
         throw new Error("EH: This gallery has been removed or is unavailable.");
       }
 
-      const total = +$(".gpc").text().split(" ").slice(-2)[0];
+      const total = new Number($(".gpc").text().split(" ").slice(-2)[0]);
       const perPage = 40;
-      const page = +$(".ptds", ".ptt").text() - 1;
+      const page = new Number($(".ptds", ".ptt").text()) - 1;
 
       return {
         id,
@@ -257,13 +257,6 @@ const galleriesFetcher = galleryFilterQueryString =>
             .get() || []
       };
     });
-/*
-const galleryLoader = new DataLoader(
-  {
-    cacheKeyFn: JSON.stringify
-  }
-);
-*/
 
 const galleryLoader = new DataLoader(
   idTokenPairs => Promise.all(idTokenPairs.map(galleryFetcher)),
