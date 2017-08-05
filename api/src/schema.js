@@ -46,7 +46,7 @@ const galleryFetcher = ({ id, token, page = 0 }) =>
         url: `http://e-hentai.org/g/${id}/${token}/`,
         thumbnailUrl: /.*((?:http|https)(?::\/{2}[\w]+)(?:[\/|\.]?)(?:[^\s)"]*))/g.exec(
           $("div", "#gd1").css("background")
-        )[1],
+        )[1].replace('exhentai','ehgt'),
         rating: $("#rating_label").text().substr(-4),
         uploader: $("a", "#gdn").first().text(),
         category: $("a", "#gdc").first().attr("href").split("/").slice(-1)[0],
@@ -194,8 +194,8 @@ const galleriesFetcher = galleryFilterQueryString =>
               uploader: $(".itu", el).text(),
               url: $("a[onmouseover]", el).attr("href"),
               thumbnailUrl:
-                $(".it2", el).children("img").first().attr("src") ||
-                "https://ehgt.org/" + $(".it2", el).text().split("~")[2],
+                ($(".it2", el).children("img").first().attr("src") ||
+                "https://exhentai.org/" + $(".it2", el).text().split("~")[2]).replace('exhentai','ehgt'),
               thumbnailHeight: $(".it2", el).css("height").split("px")[0],
               thumbnailWidth: $(".it2", el).css("width").split("px")[0],
               published: Date(`{$('.itd', el).first().text()} EDT`),
