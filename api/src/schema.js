@@ -257,13 +257,6 @@ const galleriesFetcher = galleryFilterQueryString =>
             .get() || []
       };
     });
-/*
-const galleryLoader = new DataLoader(
-  {
-    cacheKeyFn: JSON.stringify
-  }
-);
-*/
 
 const galleryLoader = new DataLoader(
   idTokenPairs => Promise.all(idTokenPairs.map(galleryFetcher)),
