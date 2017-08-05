@@ -84,12 +84,12 @@ class Galleries extends React.Component {
     if (loading && !galleries) return <div> Loading... </div>;
     return (
       <div className={css.galleries}>
-        <div style={{ width: '100%' }}>
+        <div className={css.pageInfo}>
           {total} resultses
           <hr />
         </div>
         {galleries.map(
-          ({ id, token, title, thumbnailUrl, thumbnailWidth, thumbnailHeight, stars, favorite } = {}) => {
+          ({ id, token, title, thumbnailUrl, thumbnailWidth, thumbnailHeight, favorite } = {}) => {
             const heightNormalizationRatio = css.thumbnailHeight.split('px')[0] / thumbnailHeight;
             return (
               <Link
@@ -102,13 +102,7 @@ class Galleries extends React.Component {
                 style={{
                   width: thumbnailWidth * heightNormalizationRatio,
                 }}>
-                <img
-                  alt={title}
-                  src={thumbnailUrl}
-                  style={{
-                    boxShadow: `0 0 ${stars * 5}px 0 rgba(0,0,0,${stars / 5})`,
-                    border: favorite ? '1px solid yellow' : null,
-                  }} />
+                <img alt={title} src={thumbnailUrl} className={`${favorite && css.favorite} `} />
               </Link>
             );
           },

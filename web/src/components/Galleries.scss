@@ -11,7 +11,9 @@ $thumbnail-height: 250px;
   align-items: center;
   justify-content: space-evenly;
   padding: $thumbnail-height * 0.05 $thumbnail-height * 0.025;
-
+  > .pageInfo {
+    width: 100%;
+  }
   > a {
     display: flex;
     align-items: center;
@@ -23,6 +25,11 @@ $thumbnail-height: 250px;
       height: 100%;
       transform: scale(0.9);
       transition: all 0.35s ease;
+      box-shadow: 0 0 20px 0 rgba(0, 0, 0, 1);
+
+      &.favorite {
+        border: 1px solid yellow;
+      }
 
       &:hover {
         transform: scale(1.05);
