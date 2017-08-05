@@ -1,5 +1,5 @@
 # rehentai
-React E-Hentai client via GraphQL facade
+React ExHentai/E-Hentai client via GraphQL facade
 
 ## requirements
 
