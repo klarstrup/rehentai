@@ -17,6 +17,7 @@ query Galleries($page: Int=0, $search: String="", $categories: [Category]=[]) {
       category
       url
       stars
+      favorite
       thumbnailUrl
       thumbnailWidth
       thumbnailHeight

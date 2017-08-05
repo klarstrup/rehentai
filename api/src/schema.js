@@ -95,6 +95,7 @@ const galleryFetcher = ({ id, token, page = 0 }) =>
         thumbnailUrl: /.*((?:http|https)(?::\/{2}[\w]+)(?:[\/|\.]?)(?:[^\s)"]*))/g
           .exec($("div", "#gd1").css("background"))[1]
           .replace("exhentai", "ehgt"),
+        favorite: $("#favoritelink").text() || null,
         rating: $("#rating_label").text().substr(-4),
         uploader: $("a", "#gdn").first().text(),
         category: $("a", "#gdc").first().attr("href").split("/").slice(-1)[0],
@@ -239,6 +240,7 @@ const galleriesFetcher = galleryFilterQueryString =>
               title: $(".it5", el).text(),
               uploader: $(".itu", el).text(),
               url: $("a[onmouseover]", el).attr("href"),
+              favorite: $(".i[id]", el).attr("title") || null,
               thumbnailUrl: ($(".it2", el)
                 .children("img")
                 .first()
@@ -324,6 +326,7 @@ const typeDefs = `
 		uploader: String
 		stars: Float
 		rating: Float
+    favorite: String
     thumbnailUrl: String
     thumbnailHeight: Int
     thumbnailWidth: Int
