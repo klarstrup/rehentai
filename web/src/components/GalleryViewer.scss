@@ -42,6 +42,8 @@
   footer {
     transition: 300ms all ease;
     opacity: 0;
+    text-shadow: 0 0 12px black;
+    color: white;
     &:hover {
       opacity: 1;
     }
