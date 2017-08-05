@@ -1,0 +1,49 @@
+.GalleryViewer {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  > header {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    z-index: 2;
+    transition: 300ms all ease;
+    background: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 32px 24px rgba(0, 0, 0, 0.6);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 8px 0;
+    &:hover {
+      opacity: 1;
+    }
+
+    img {
+      max-height: auto;
+      max-width: 72px;
+      margin-right: 8px;
+    }
+    .gallery-link {
+      color: white;
+      align-items: center;
+      font-size: 30px;
+      text-decoration: none;
+    }
+    .front-link {
+      padding: 0 8px;
+      color: white;
+      font-size: 60px;
+      text-decoration: none;
+    }
+  }
+  footer {
+    transition: 300ms all ease;
+    opacity: 0;
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

@@ -1,0 +1,25 @@
+query Galleries($page: Int=0, $search: String="", $categories: [Category]=[]) {
+  getGalleries(
+    search: $search
+    categories: $categories
+    page: $page
+  ) {
+    pageInfo {
+      page
+      hasNextPage
+      total
+    }
+    galleries {
+      id
+      token
+      uploader
+      title
+      category
+      url
+      stars
+      thumbnailUrl
+      thumbnailWidth
+      thumbnailHeight
+    }
+  }
+}

@@ -1,0 +1,77 @@
+/* Regular @import url statements work as you'd expect them to -- alternatively
+you can import locally, and they wind up in the resulting bundle */
+@import '~reset-css/reset.css';
+
+@font-face {
+  font-family: 'Radiance';
+  src: url("../static/fonts/radiance.eot");
+  src: url("../static/fonts/radiance.eot?#iefix") format("embedded-opentype"),
+    url("../static/fonts/radiance.woff") format("woff"),
+    url("../static/fonts/radiance.ttf") format("truetype"),
+    url("../static/fonts/radiance.svg#ywftsvg") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Radiance-SemiBold';
+  src: url("../static/fonts/radiance-semibold.eot");
+  src: url("../static/fonts/radiance-semibold.eot?#iefix")
+      format("embedded-opentype"),
+    url("../static/fonts/radiance-semibold.woff") format("woff"),
+    url("../static/fonts/radiance-semibold.ttf") format("truetype"),
+    url("../static/fonts/radiance-semibold.svg#ywftsvg") format("svg");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Radiance-Bold';
+  src: url("../static/fonts/radiance-bold.eot");
+  src: url("../static/fonts/radiance-bold.eot?#iefix")
+      format("embedded-opentype"),
+    url("../static/fonts/radiance-bold.woff") format("woff"),
+    url("../static/fonts/radiance-bold.ttf") format("truetype"),
+    url("../static/fonts/radiance-bold.svg#ywftsvg") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  margin: 0;
+  color: #f1f1f1;
+  background: #34353b;
+  background: radial-gradient(
+    ellipse at center 75%,
+    rgba(120, 120, 120, 1) 0%,
+    rgba(0, 0, 0, 1) 100%
+  ); /* w3c */
+  background-size: 100%;
+  background-attachment: fixed;
+  font-weight: normal;
+  height: 100%;
+}
+html {
+  padding: 0;
+  border: 0;
+  height: 100%;
+  font-family: "Radiance", sans-serif;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+#main {
+  height: 100%;
+}
+img {
+  image-rendering: optimizeSpeed; /*                     */
+  image-rendering: -moz-crisp-edges; /* Firefox             */
+  image-rendering: -o-crisp-edges; /* Opera               */
+  image-rendering: -webkit-optimize-contrast; /* Chrome (and Safari) */
+  image-rendering: optimize-contrast; /* CSS3 Proposed       */
+  -ms-interpolation-mode: nearest-neighbor; /* IE8+                */
+}

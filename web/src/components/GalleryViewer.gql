@@ -1,0 +1,21 @@
+query Gallery($id: Int!, $token: String!) {
+  getGallery(id: $id, token: $token) {
+    id
+    token
+    title
+    tags
+    thumbnailUrl
+    imagesPage {
+      pageInfo {
+        total
+      }
+      images(limit: 1) {
+        id
+        token
+        galleryId
+        pageNumber
+        name
+      }
+    }
+  }
+}
