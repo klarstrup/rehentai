@@ -70,6 +70,8 @@ logOnToEH(EXHENTAI_USERNAME, EXHENTAI_PASSWORD).then(res =>
   console.log("Signed into EH")
 );
 
+const galleryFetcher = ({ id, token, page = 0 }) =>
+  fetch(`http://exhentai.org/g/${id}/${token}/?nw=always&p=${page}`).then(res =>
     res.text().then(html => {
       const $ = cheerio.load(html);
 
@@ -78,7 +80,7 @@ logOnToEH(EXHENTAI_USERNAME, EXHENTAI_PASSWORD).then(res =>
           "<p>This gallery has been removed or is unavailable.</p>"
         ) > 0
       ) {
-        throw new Error("E-Hentai: This gallery has been removed or is unavailable.");
+        throw new Error("EH: This gallery has been removed or is unavailable.");
       }
 
       const total = +$(".gpc").text().split(" ").slice(-2)[0];
@@ -89,10 +91,10 @@ logOnToEH(EXHENTAI_USERNAME, EXHENTAI_PASSWORD).then(res =>
         id,
         token,
         title: $("#gn").text(),
-        url: `http://e-hentai.org/g/${id}/${token}/`,
-        thumbnailUrl: /.*((?:http|https)(?::\/{2}[\w]+)(?:[\/|\.]?)(?:[^\s)"]*))/g.exec(
-          $("div", "#gd1").css("background")
-        )[1].replace('exhentai','ehgt'),
+        url: `http://exhentai.org/g/${id}/${token}/`,
+        thumbnailUrl: /.*((?:http|https)(?::\/{2}[\w]+)(?:[\/|\.]?)(?:[^\s)"]*))/g
+          .exec($("div", "#gd1").css("background"))[1]
+          .replace("exhentai", "ehgt"),
         rating: $("#rating_label").text().substr(-4),
         uploader: $("a", "#gdn").first().text(),
         category: $("a", "#gdc").first().attr("href").split("/").slice(-1)[0],
@@ -123,11 +125,9 @@ const idTokenPageNumberFromImageUrl = url => ({
   pageNumber: url.split("/").slice(-1)[0].split("-")[1] - 1
 });
 const imageFetcher = ({ galleryId, token, pageNumber = 0 }) =>
-  fetch(`http://e-hentai.org/s/${token}/${galleryId}-${1 + pageNumber}`, {
-    headers: {
-      cookie: "nw=1; uconfig=uh_n" // This is needed to avoid the "Offensive For Everyone" screen.
-    }
-  }).then(res =>
+  fetch(
+    `http://exhentai.org/s/${token}/${galleryId}-${1 + pageNumber}`
+  ).then(res =>
     res.text().then(html => {
       const $ = cheerio.load(html);
 
@@ -138,7 +138,7 @@ const imageFetcher = ({ galleryId, token, pageNumber = 0 }) =>
       const [fileWidth, fileHeight] = resolution.split(" x ").map(d => +d);
 
       if ($("#img").attr("src").substr(-7) === "509.gif") {
-        throw new Error("E-Hentai: 509 Bandwidth Exceeded");
+        throw new Error("EH: 509 Bandwidth Exceeded");
       }
 
       return {
@@ -186,7 +186,7 @@ const galleryFilterToQueryString = ({
   });
 
 const galleriesFetcher = galleryFilterQueryString =>
-  fetch(`http://e-hentai.org/?${galleryFilterQueryString}`)
+  fetch(`http://exhentai.org/?${galleryFilterQueryString}`)
     .then(res => res.text())
     .then(html => {
       const $ = cheerio.load(html);
@@ -239,9 +239,12 @@ const galleriesFetcher = galleryFilterQueryString =>
               title: $(".it5", el).text(),
               uploader: $(".itu", el).text(),
               url: $("a[onmouseover]", el).attr("href"),
-              thumbnailUrl:
-                ($(".it2", el).children("img").first().attr("src") ||
-                "https://exhentai.org/" + $(".it2", el).text().split("~")[2]).replace('exhentai','ehgt'),
+              thumbnailUrl: ($(".it2", el)
+                .children("img")
+                .first()
+                .attr("src") ||
+                "https://exhentai.org/" + $(".it2", el).text().split("~")[2])
+                .replace("exhentai", "ehgt"),
               thumbnailHeight: $(".it2", el).css("height").split("px")[0],
               thumbnailWidth: $(".it2", el).css("width").split("px")[0],
               published: Date(`{$('.itd', el).first().text()} EDT`),
