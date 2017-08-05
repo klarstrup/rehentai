@@ -282,13 +282,13 @@ const typeDefs = `
     DOUJINSHI
     MANGA
     ARTISTCG
-		GAMECG
-		WESTERN
-		NONH
-		IMAGESET
-		COSPLAY
-		ASIANPORN
-		MISC
+    GAMECG
+    WESTERN
+    NONH
+    IMAGESET
+    COSPLAY
+    ASIANPORN
+    MISC
   }
   type Query {
     getGalleries(search: String, category: Category, categories: [Category], page: Int): GalleriesPage
@@ -296,21 +296,21 @@ const typeDefs = `
     getImage(galleryId: Int!, token: String!, pageNumber: Int!): Image
   }
   type Gallery {
-		id: Int
+    id: Int
     token: String
     title: String
-		published: String
-		category: Category
-		uploader: String
-		stars: Float
-		rating: Float
+    published: String
+    category: Category
+    uploader: String
+    stars: Float
+    rating: Float
     favorite: String
     thumbnailUrl: String
     thumbnailHeight: Int
     thumbnailWidth: Int
-		url: String
-		tags: [String]
-		imagesPage(page: Int = 0): ImagesPage
+    url: String
+    tags: [String]
+    imagesPage(page: Int = 0): ImagesPage
   }
   type PageInfo {
     total: Int
@@ -328,12 +328,12 @@ const typeDefs = `
     pageInfo: PageInfo
     galleries: [Gallery]
   }
-	type Image {
+  type Image {
     id: String
     galleryId: Int
-		token: String
-		pageNumber: Int
-		name: String
+    token: String
+    pageNumber: Int
+    name: String
     url: String
     fileWidth: Int
     fileHeight: Int
@@ -343,7 +343,7 @@ const typeDefs = `
     previousImage: Image
     firstImage: Image
     lastImage: Image
-	}
+  }
 `;
 
 const backgroundPositionToStars = backgroundPosition => {
