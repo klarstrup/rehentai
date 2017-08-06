@@ -173,7 +173,6 @@ const galleryFilterToQueryString = ({
 }) =>
   qs.stringify({
     page,
-    f_search: _.sortBy(search.match(/(?=\S)[^"\s]*(?:"[^\\"]*(?:\\[\s\S][^\\"]*)*"[^"\s]*)*/g)).join(' '),
     f_search: search && _.sortBy(search.match(/(?=\S)[^"\s]*(?:"[^\\"]*(?:\\[\s\S][^\\"]*)*"[^"\s]*)*/g)).join(' '),
     f_doujinshi: +categories.includes("DOUJINSHI"),
     f_manga: +categories.includes("MANGA"),
@@ -292,7 +291,6 @@ const typeDefs = `
     MISC
   }
   type Query {
-    getGalleries(search: String, category: Category, categories: [Category], page: Int): GalleriesPage
     getGalleries(search: String="", category: Category, categories: [Category], page: Int): GalleriesPage
     getGallery(id: Int!, token: String!): Gallery
     getImage(galleryId: Int!, token: String!, pageNumber: Int!): Image
