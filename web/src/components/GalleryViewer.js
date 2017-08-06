@@ -21,7 +21,7 @@ export const prefetchGalleryViewer = ({ id, token }, client) => () => {
       variables: { id, token },
     })
     .then(({ data: { getGallery: { imagesPage: { images: [{ fileUrl }] } } } }) =>
-      preloadImage(fileUrl),
+      !SERVER && preloadImage(fileUrl),
     );
 };
 
