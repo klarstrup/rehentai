@@ -173,7 +173,7 @@ const galleryFilterToQueryString = ({
 }) =>
   qs.stringify({
     page,
-    f_search: search,
+    f_search: _.sortBy(search.match(/(?=\S)[^"\s]*(?:"[^\\"]*(?:\\[\s\S][^\\"]*)*"[^"\s]*)*/g)).join(' '),
     f_doujinshi: +categories.includes("DOUJINSHI"),
     f_manga: +categories.includes("MANGA"),
     f_artistcg: +categories.includes("ARTISTCG"),
