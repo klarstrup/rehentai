@@ -145,6 +145,7 @@ const imageFetcher = ({ galleryId, token, pageNumber = 0 }) =>
       return {
         ...idTokenPageNumberFromImageUrl(res.url),
         fileUrl: $("#img").attr("src"),
+        url: res.url,
         name,
         fileWidth,
         fileHeight,
