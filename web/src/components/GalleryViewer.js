@@ -79,6 +79,8 @@ class GalleryViewer extends React.Component {
             <Link className={css['gallery-link']} to={`/gallery/${id}/${token}`}>
               {title}
             </Link>
+            {' | '}
+            <a href={`//exhentai.org/g/${id}/${token}`}>EH</a>
             <hr />
             <div className={css.tags}>
               {_.map(tagsByNamespace, (tagsOfNamespace, namespace) =>
@@ -115,6 +117,8 @@ class GalleryViewer extends React.Component {
           : <ImageViewer {...frontPage} galleryToken={token} />}
         <footer className={css['page-position']}>
           {(imageId && imageId.split('-')[1]) || frontPage.pageNumber || 1}/{total}
+          {' | '}
+          <a href={`//exhentai.org/s/${imageToken}/${imageId}`}>EH</a>
         </footer>
       </section>
     );
