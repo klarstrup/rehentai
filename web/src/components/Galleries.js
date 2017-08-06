@@ -91,6 +91,13 @@ class Galleries extends React.Component {
         {galleries.map(
           ({ id, token, title, thumbnailUrl, thumbnailWidth, thumbnailHeight, favorite } = {}) => {
             const heightNormalizationRatio = css.thumbnailHeight.split('px')[0] / thumbnailHeight;
+            const shortTitle = title
+              .replace(/{.*?}/g, '')
+              .replace(/\[.*?\]/g, '')
+              .replace(/<.*?>/g, '')
+              .replace(/\(.*?\)/g, '')
+              .replace('-', '‑');
+            const shorterTitle = shortTitle.split(' | ')[1] || shortTitle;
             return (
               <Link
                 to={{
@@ -102,7 +109,10 @@ class Galleries extends React.Component {
                 style={{
                   width: thumbnailWidth * heightNormalizationRatio,
                 }}>
-                <img alt={title} src={thumbnailUrl} className={`${favorite && css.favorite} `} />
+                <img alt={title} src={thumbnailUrl} className={favorite ? css.favorite : ''} />
+                <div className={css['gallery-title']}>
+                  {shorterTitle}
+                </div>
               </Link>
             );
           },
