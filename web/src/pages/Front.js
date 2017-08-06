@@ -1,9 +1,9 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import URLSearchParams from 'url-search-params';
+import _ from 'lodash';
 
 import Galleries from '../components/Galleries';
-
 
 @withRouter
 class Front extends React.PureComponent {
@@ -13,12 +13,16 @@ class Front extends React.PureComponent {
     this.state = { search };
 
     this.handleChange = this.handleChange.bind(this);
+    this.updateUrl = _.debounce(this.updateUrl, 300, { leading: true });
   }
   handleChange(event) {
     const search = event.target.value;
     this.setState({ search });
+    this.updateUrl(search.trim());
+  }
+  updateUrl(search) {
     if (search) {
-      this.props.history.push(`/?search=${search.trim()}`);
+      this.props.history.push(`/?search=${search}`);
     } else {
       this.props.history.push('/');
     }
