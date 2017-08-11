@@ -10,28 +10,33 @@ import nodeFetch from "node-fetch";
 import cheerio from "cheerio";
 
 import qs from "qs";
-import _ from "lodash";
+import R from "ramda";
 import DataLoader from "dataloader";
 import process from "process";
 
 require("dotenv").config({ path: `${__dirname}/../../.env` });
 
+const log = arg => console.log(arg) || arg;
+
+const uconfigFromObject = R.compose(R.join("-"), R.map(R.join("_")), R.toPairs);
+
 const globalCookies = {
   nw: 1,
-  uconfig: "lt_p-to_p-pn_1",
+  uconfig: uconfigFromObject({
+    lt: "p", // Thumbnail Settings: On page load
+    pn: "1", // Show gallery page numbers: Yes
+  }),
   s: "582183e83"
 };
 
-const objectToCookieString = object =>
-  _.map(object, (value, key) => `${key}=${value}`).join("; ");
+const cookieStringFromObject = R.compose(R.join('; '), R.map(R.join('=')), R.toPairs)
 
 const fetch = (url, options = {}) =>
-  console.log(objectToCookieString(globalCookies)) ||
   nodeFetch(url, {
     credentials: "include",
     ...options,
     headers: {
-      cookie: objectToCookieString(globalCookies),
+      cookie: cookieStringFromObject(globalCookies),
       ...options.headers
     }
   }).then(res => console.log(`GET ${url} ${res.status}`) || res);
@@ -174,7 +179,11 @@ const galleryFilterToQueryString = ({
 }) =>
   qs.stringify({
     page,
-    f_search: search && _.sortBy(search.match(/(?=\S)[^"\s]*(?:"[^\\"]*(?:\\[\s\S][^\\"]*)*"[^"\s]*)*/g)).join(' '),
+    f_search:
+      search &&
+      R.sortBy(R.identity)(
+        search.match(/(?=\S)[^"\s]*(?:"[^\\"]*(?:\\[\s\S][^\\"]*)*"[^"\s]*)*/g)
+      ).join(" "),
     f_doujinshi: +categories.includes("DOUJINSHI"),
     f_manga: +categories.includes("MANGA"),
     f_artistcg: +categories.includes("ARTISTCG"),
@@ -395,10 +404,10 @@ const resolvers = {
       }
       return galleryLoader
         .load({ id, token, page })
-        .then(_.property("imagesPage"));
+        .then(R.prop("imagesPage"));
     },
     tags: ({ id, token, tags }) =>
-      tags || galleryLoader.load({ id, token }).then(_.property("tags"))
+      tags || galleryLoader.load({ id, token }).then(R.prop("tags"))
   },
   ImagesPage: {
     images: ({ images }, { limit, start = 0 }) => images.slice(start, limit)
@@ -408,7 +417,7 @@ const resolvers = {
       fileUrl ||
       imageLoader
         .load({ galleryId, token, pageNumber })
-        .then(_.property("fileUrl")),
+        .then(R.prop("fileUrl")),
     nextImage: someFunction("nextImage"),
     lastImage: someFunction("lastImage"),
     firstImage: someFunction("firstImage"),
