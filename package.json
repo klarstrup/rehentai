@@ -3,14 +3,14 @@
   "version": "0.0.1",
   "description": "",
   "dependencies": {
-    "concurrently": "^3.5.0"
+    "npm-run-all": "^4.0.2"
   },
   "devDependencies": {},
   "scripts": {
-    "postinstall": "concurrently -r -p \"[{name}]\" -n \"api,web\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run install:api\" \"npm run install:web\"",
+    "postinstall": "run-s -l install:api install:web",
     "install:api": "cd api && yarn",
     "install:web": "cd web && yarn",
-    "start": "concurrently -p \"[{name}]\" -n \"api,web\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run start:api\" \"npm run start:web\"",
+    "start": "run-p -l start:api start:web",
     "start:api": "npm start --prefix api",
     "start:web": "npm start --prefix web"
   },
