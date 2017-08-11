@@ -34,6 +34,7 @@ $thumbnail-height: 250px;
       box-shadow: 0 0 20px 0 rgba(0, 0, 0, 1);
       transition: all .3s ease;
       &.favorite {
+        box-shadow: 0 0 20px 0 yellow;
         border: 2px solid yellow;
       }
     }
