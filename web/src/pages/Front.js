@@ -32,7 +32,7 @@ class Front extends React.PureComponent {
     return (
       <div>
         <input type="text" value={this.state.search} onChange={this.handleChange} />
-        <Galleries search={search} />
+        <Galleries search={search} categories={['WESTERN', 'DOUJINSHI', 'MANGA']} />
       </div>
     );
   }
