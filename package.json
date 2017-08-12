@@ -11,8 +11,8 @@
     "install:api": "cd api && yarn",
     "install:web": "cd web && yarn",
     "start": "run-p -l start:api start:web",
-    "start:api": "npm start --prefix api",
-    "start:web": "npm start --prefix web"
+    "start:api": "cd api && yarn start",
+    "start:web": "cd web && yarn start"
   },
   "author": "",
   "license": "ISC"
