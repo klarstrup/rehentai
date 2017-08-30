@@ -9,7 +9,7 @@ import Galleries from '../components/Galleries';
 class Front extends React.PureComponent {
   constructor(props) {
     super(props);
-    const search = new URLSearchParams(props.location.search).get('search');
+    const search = new URLSearchParams(props.location.search).get('search') || '';
     this.state = { search };
 
     this.handleChange = this.handleChange.bind(this);
