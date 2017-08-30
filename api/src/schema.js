@@ -171,6 +171,8 @@ const imageFetcher = ({ galleryId, token, pageNumber = 0 }) =>
     })
   );
 
+const categoryEnumQueryFieldMap = { "DOUJINSHI": "f_doujinshi", "MANGA": "f_manga", "ARTISTCG": "f_artistcg", "GAMECG": "f_gamecg", "WESTERN": "f_western", "NONH": "f_non-h", "IMAGESET": "f_imageset", "COSPLAY": "f_cosplay", "ASIANPORN": "f_asianporn", "MISC": "f_misc" };
+const galleryFilterCategoriesToQueryObject = R.reduce((acc, cat) => ({ ...acc, [categoryEnumQueryFieldMap[cat]]: 1 }), {})
 const galleryFilterToQueryString = ({
   search = "",
   page = 0,
@@ -180,20 +182,12 @@ const galleryFilterToQueryString = ({
   qs.stringify({
     page,
     f_search:
-      search &&
-      R.sortBy(R.identity)(
-        search.match(/(?=\S)[^"\s]*(?:"[^\\"]*(?:\\[\s\S][^\\"]*)*"[^"\s]*)*/g)
-      ).join(" "),
-    f_doujinshi: +categories.includes("DOUJINSHI"),
-    f_manga: +categories.includes("MANGA"),
-    f_artistcg: +categories.includes("ARTISTCG"),
-    f_gamecg: +categories.includes("GAMECG"),
-    f_western: +categories.includes("WESTERN"),
-    "f_non-h": +categories.includes("NONH"),
-    f_imageset: +categories.includes("IMAGESET"),
-    f_cosplay: +categories.includes("COSPLAY"),
-    f_asianporn: +categories.includes("ASIANPORN"),
-    f_misc: +categories.includes("MISC")
+    search &&
+    R.sortBy(R.identity)(
+      search.match(/(?=\S)[^"\s]*(?:"[^\\"]*(?:\\[\s\S][^\\"]*)*"[^"\s]*)*/g)
+    ).join(" "),
+    ...galleryFilterCategoriesToQueryObject(categories),
+    f_apply: 'Apply Filter'
   });
 
 const galleriesFetcher = galleryFilterQueryString =>
