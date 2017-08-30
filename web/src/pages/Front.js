@@ -13,7 +13,13 @@ class Front extends React.PureComponent {
     this.state = { search };
 
     this.handleChange = this.handleChange.bind(this);
-    this.updateUrl = _.debounce(this.updateUrl, 300, { leading: true });
+    this.updateUrl = _.debounce(this.updateUrl, 500, { leading: true });
+  }
+  componentWillReceiveProps(newProps) {
+    this.setState(state => ({
+      ...state,
+      search: new URLSearchParams(newProps.location.search).get('search') || '',
+    }));
   }
   handleChange(event) {
     const search = event.target.value;
