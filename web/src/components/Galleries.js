@@ -77,7 +77,7 @@ class Galleries extends React.Component {
   }
   render() {
     const {
-      data: { loading, getGalleries: { galleries, pageInfo: { total } = {} } = {} },
+      data: { loading, getGalleries: { galleries=[], pageInfo: { total } = {} } = {} },
       client,
       search,
     } = this.props;
