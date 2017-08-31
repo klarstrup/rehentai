@@ -7,8 +7,36 @@ import { prefetchGalleryViewer } from './GalleryViewer';
 import css from './Galleries.scss';
 import query from './Galleries.gql';
 
-// The data prop, which is provided by the wrapper below contains,
-// a `loading` key while the query is in flight and posts when it is ready
+
+
+const GalleriesItem = ({ id, token, title, thumbnailUrl, thumbnailWidth, thumbnailHeight, favorite } = {}) => {
+  const heightNormalizationRatio = css.thumbnailHeight.split('px')[0] / thumbnailHeight;
+  const shortTitle = title
+    .replace(/{.*?}/g, '')
+    .replace(/\[.*?\]/g, '')
+    .replace(/<.*?>/g, '')
+    .replace(/\(.*?\)/g, '')
+    .replace('-', '‑');
+  const shorterTitle = shortTitle.split(' | ')[1] || shortTitle;
+  return (
+    <Link
+      to={{
+        pathname: `/gallery/${id}/${token}`,
+        state: { search },
+      }}
+      key={id}
+      onMouseOver={(() => {}) || prefetchGalleryViewer({ id, token }, client)}
+      style={{
+        width: thumbnailWidth * heightNormalizationRatio,
+      }}>
+      <img alt={title} src={thumbnailUrl} className={favorite ? css.favorite : ''} />
+      <div className={css['gallery-title']}>
+        {shorterTitle}
+      </div>
+    </Link>
+  );
+}
+
 @withApollo
 @graphql(query, {
   options: ({ search = '', categories = [] }) => ({
@@ -88,35 +116,7 @@ class Galleries extends React.Component {
           {total} results
           <hr />
         </div>
-        {galleries.map(
-          ({ id, token, title, thumbnailUrl, thumbnailWidth, thumbnailHeight, favorite } = {}) => {
-            const heightNormalizationRatio = css.thumbnailHeight.split('px')[0] / thumbnailHeight;
-            const shortTitle = title
-              .replace(/{.*?}/g, '')
-              .replace(/\[.*?\]/g, '')
-              .replace(/<.*?>/g, '')
-              .replace(/\(.*?\)/g, '')
-              .replace('-', '‑');
-            const shorterTitle = shortTitle.split(' | ')[1] || shortTitle;
-            return (
-              <Link
-                to={{
-                  pathname: `/gallery/${id}/${token}`,
-                  state: { search },
-                }}
-                key={id}
-                onMouseOver={(() => {}) || prefetchGalleryViewer({ id, token }, client)}
-                style={{
-                  width: thumbnailWidth * heightNormalizationRatio,
-                }}>
-                <img alt={title} src={thumbnailUrl} className={favorite ? css.favorite : ''} />
-                <div className={css['gallery-title']}>
-                  {shorterTitle}
-                </div>
-              </Link>
-            );
-          },
-        )}
+        {galleries.map(GalleriesItem)}
       </div>
     );
   }

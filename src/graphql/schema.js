@@ -420,13 +420,6 @@ const resolvers = {
     previousImage: someFunction("previousImage")
   }
 };
-console.log("dookie");
-
-console.log(makeExecutableSchema({
-  typeDefs,
-  resolvers
-  //  logger: console
-}))
 
 export default makeExecutableSchema({
   typeDefs,
