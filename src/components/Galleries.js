@@ -85,7 +85,7 @@ class Galleries extends React.Component {
     return (
       <div className={css.galleries}>
         <div className={css.pageInfo}>
-          {total} resultses
+          {total} results
           <hr />
         </div>
         {galleries.map(
