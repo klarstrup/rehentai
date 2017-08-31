@@ -7,37 +7,71 @@ import { prefetchGalleryViewer } from './GalleryViewer';
 import css from './Galleries.scss';
 import query from './Galleries.gql';
 
+@withApollo
+class GalleriesItem extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { imageStatus: 'loading' };
 
+    this.handleImageLoaded = this.handleImageLoaded.bind(this);
+    this.handleImageErrored = this.handleImageErrored.bind(this);
+  }
 
-const GalleriesItem = ({ id, token, title, thumbnailUrl, thumbnailWidth, thumbnailHeight, favorite } = {}) => {
-  const heightNormalizationRatio = css.thumbnailHeight.split('px')[0] / thumbnailHeight;
-  const shortTitle = title
-    .replace(/{.*?}/g, '')
-    .replace(/\[.*?\]/g, '')
-    .replace(/<.*?>/g, '')
-    .replace(/\(.*?\)/g, '')
-    .replace('-', '‑');
-  const shorterTitle = shortTitle.split(' | ')[1] || shortTitle;
-  return (
-    <Link
-      to={{
-        pathname: `/gallery/${id}/${token}`,
-        state: { search },
-      }}
-      key={id}
-      onMouseOver={(() => {}) || prefetchGalleryViewer({ id, token }, client)}
-      style={{
-        width: thumbnailWidth * heightNormalizationRatio,
-      }}>
-      <img alt={title} src={thumbnailUrl} className={favorite ? css.favorite : ''} />
-      <div className={css['gallery-title']}>
-        {shorterTitle}
-      </div>
-    </Link>
-  );
+  handleImageLoaded() {
+    this.setState({ imageStatus: 'loaded' });
+  }
+
+  handleImageErrored() {
+    this.setState({ imageStatus: 'failed' });
+  }
+  render() {
+    const {
+      id,
+      token,
+      title,
+      thumbnailUrl,
+      thumbnailWidth,
+      thumbnailHeight,
+      favorite,
+      search,
+      client,
+    } = this.props;
+    const heightNormalizationRatio = css.thumbnailHeight.split('px')[0] / thumbnailHeight;
+    const shortTitle = title
+      .replace(/{.*?}/g, '')
+      .replace(/\[.*?\]/g, '')
+      .replace(/<.*?>/g, '')
+      .replace(/\(.*?\)/g, '')
+      .replace('-', '‑');
+    const shorterTitle = shortTitle.split(' | ')[1] || shortTitle;
+    return (
+      <Link
+        to={{
+          pathname: `/gallery/${id}/${token}`,
+          state: { search },
+        }}
+        onMouseOver={(() => {}) || prefetchGalleryViewer({ id, token }, client)}
+        style={{
+          width: thumbnailWidth * heightNormalizationRatio,
+          opacity: +(
+            SERVER ||
+            this.state.imageStatus === 'loaded' ||
+            this.state.imageStatus === 'failed'
+          ),
+          background: this.state.imageStatus === 'failed' && 'red',
+        }}>
+        <img
+          alt={title}
+          src={thumbnailUrl}
+          className={favorite ? css.favorite : ''}
+          onLoad={this.handleImageLoaded}
+          onError={this.handleImageErrored} />
+        <div className={css['gallery-title']}>{shorterTitle}</div>
+      </Link>
+    );
+  }
 }
 
-@withApollo
 @graphql(query, {
   options: ({ search = '', categories = [] }) => ({
     variables: {
@@ -105,8 +139,7 @@ class Galleries extends React.Component {
   }
   render() {
     const {
-      data: { loading, getGalleries: { galleries=[], pageInfo: { total } = {} } = {} },
-      client,
+      data: { loading, getGalleries: { galleries = [], pageInfo: { total } = {} } = {} },
       search,
     } = this.props;
     if (loading && !galleries) return <div> Loading... </div>;
@@ -116,7 +149,7 @@ class Galleries extends React.Component {
           {total} results
           <hr />
         </div>
-        {galleries.map(GalleriesItem)}
+        {galleries.map(gallery => <GalleriesItem key={gallery.id} {...gallery} search={search} />)}
       </div>
     );
   }
