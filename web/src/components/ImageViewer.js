@@ -31,7 +31,7 @@ class ImageViewer extends React.Component {
     window.removeEventListener('keydown', this.handleKey);
   }
   handleKey({ code }) {
-    const { data, galleryToken } = this.props;
+    const { data, galleryToken, pageTotal } = this.props;
     const { getImage: image } = data;
     if (!image) {
       return;
@@ -39,9 +39,9 @@ class ImageViewer extends React.Component {
     const { galleryId, nextImage, previousImage } = image;
 
     const galleryUrl = `/gallery/${galleryId}/${galleryToken}`;
-    const nextImageSubUrl = nextImage && `/image/${nextImage.token}/${nextImage.id}`;
+    const nextImageSubUrl = nextImage && `/image/${nextImage.token}/${nextImage.id}/${pageTotal}`;
     const previousImageSubUrl =
-      previousImage && `/image/${previousImage.token}/${previousImage.id}`;
+      previousImage && `/image/${previousImage.token}/${previousImage.id}/${pageTotal}`;
     switch (code) {
       case 'ArrowLeft':
       case 'KeyA':
@@ -56,12 +56,12 @@ class ImageViewer extends React.Component {
     }
   }
   render() {
-    const { data, total, galleryToken } = this.props;
+    const { data, total, galleryToken, pageTotal } = this.props;
     const { getImage: image = {}, loading, error } = data;
     const { fileUrl, galleryId, nextImage } = image;
     nextImage && !SERVER && preloadImage(nextImage.fileUrl);
     const nextLink =
-      nextImage && `/gallery/${galleryId}/${galleryToken}/image/${nextImage.token}/${nextImage.id}`;
+      nextImage && `/gallery/${galleryId}/${galleryToken}/image/${nextImage.token}/${nextImage.id}/${pageTotal}`;
 
     return (
       <div className={css.ImageViewer}>

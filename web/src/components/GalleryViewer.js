@@ -113,8 +113,9 @@ class GalleryViewer extends React.Component {
             galleryId={id}
             galleryToken={token}
             token={imageToken}
-            pageNumber={imageId.split('-')[1] - 1} />
-          : <ImageViewer {...frontPage} galleryToken={token} />}
+            pageNumber={imageId.split('-')[1] - 1}
+            pageTotal={total} />
+          : <ImageViewer {...frontPage} pageTotal={total} galleryToken={token} />}
         <footer className={css['page-position']}>
           {(imageId && imageId.split('-')[1]) || frontPage.pageNumber || 1}/{total}
           {' | '}
