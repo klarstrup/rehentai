@@ -35,13 +35,18 @@
             padding-right: 4px;
           }
           > ul > li {
-            font-size: 12px;
             display: inline-block;
-            border: 1px solid #989898;
-            border-radius: 5px;
-            margin: 1px;
-            padding: 1px 4px;
-            white-space: nowrap;
+            > a {
+              display: inline-block;
+              margin: 1px;
+              font-size: 12px;
+              white-space: nowrap;
+              color: white;
+              border: 1px solid #989898;
+              border-radius: 5px;
+              padding: 1px 4px;
+              text-decoration: none;
+            }
           }
         }
       }

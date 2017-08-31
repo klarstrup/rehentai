@@ -91,7 +91,9 @@ class GalleryViewer extends React.Component {
                   <ul>
                     {tagsOfNamespace.map(tag =>
                       (<li key={tag}>
-                        {tag.replace(/_/g, ' ')}
+                        <Link to={`/?search=${namespace}:${tag}`}>
+                          {tag.replace(/_/g, ' ')}
+                        </Link>
                       </li>),
                     )}
                   </ul>
