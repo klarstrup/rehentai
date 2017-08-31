@@ -26,15 +26,21 @@ const globalCookies = {
 
 const cookieStringFromObject = R.compose(R.join('; '), R.map(R.join('=')), R.toPairs);
 
-const fetch = (url, options = {}) =>
-  nodeFetch(url, {
+const fetch = async (url, options = {}) => {
+  const start = new Date();
+  const result = await nodeFetch(url, {
     credentials: 'include',
     ...options,
     headers: {
       cookie: cookieStringFromObject(globalCookies),
       ...options.headers,
     },
-  }).then(res => console.log(`GET ${url} ${res.status}`) || res);
+  })
+  const end = new Date() - start;
+  console.log(`GET ${url} ${result.status}, %dms`, end);
+
+  return result;
+}
 
 const logOnToEH = async (UserName, PassWord) => {
   const loginResponse = await fetch(
@@ -83,7 +89,6 @@ const idTokenPageNumberFromImageUrl = url => ({
 });
 
 const galleryFetcher = ({ id, token, page = 0 }) =>
-  console.log(page) ||
   fetch(`http://exhentai.org/g/${id}/${token}/?nw=always&p=${page}`).then(res =>
     res.text().then(html => {
       const $ = cheerio.load(html);
