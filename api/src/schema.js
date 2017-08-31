@@ -298,6 +298,7 @@ const typeDefs = `
     getGalleries(search: String="", category: Category, categories: [Category], page: Int): GalleriesPage
     getGallery(id: Int!, token: String!): Gallery
     getImage(galleryId: Int!, token: String!, pageNumber: Int!): Image
+    getCategories: [Category]
   }
   type Gallery {
     id: Int
@@ -387,7 +388,8 @@ const resolvers = {
     getGallery: (root, { id, token }) =>
       galleryLoader.load({ id, token, page: 0 }),
     getImage: (root, { galleryId, token, pageNumber }) =>
-      imageLoader.load({ galleryId, token, pageNumber })
+      imageLoader.load({ galleryId, token, pageNumber }),
+    getCategories: ()=>Object.keys(categoryEnumQueryFieldMap),
   },
   Gallery: {
     //    __typeName: (w,t,f,{ parentType })=>''+JSON.stringify(parentType),
