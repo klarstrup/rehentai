@@ -1,4 +1,5 @@
 import React from 'react';
+import Helmet from 'react-helmet';
 import { graphql } from 'react-apollo';
 import { Link, withRouter } from 'react-router-dom';
 import _ from 'lodash';
@@ -71,6 +72,14 @@ class GalleryViewer extends React.Component {
     }, {});
     return (
       <section className={css.GalleryViewer}>
+        <Helmet
+          title={`${title} - Rehentai`}
+          meta={[
+            {
+              name: 'description',
+              content: 'Rehentai',
+            },
+          ]} />
         <header>
           <Link to={`/gallery/${id}/${token}`}>
             <img src={thumbnailUrl} alt={frontPage.name} />

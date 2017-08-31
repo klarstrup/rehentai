@@ -1,4 +1,5 @@
 import React from 'react';
+import Helmet from 'react-helmet';
 import { withRouter } from 'react-router-dom';
 import URLSearchParams from 'url-search-params';
 import _ from 'lodash';
@@ -37,6 +38,14 @@ class Front extends React.PureComponent {
     const search = new URLSearchParams(this.props.location.search).get('search');
     return (
       <div>
+        <Helmet
+          title={`${(search && `${search} - `) || ''}Rehentai`}
+          meta={[
+            {
+              name: 'description',
+              content: 'Rehentai',
+            },
+          ]} />
         <input type="text" value={this.state.search} onChange={this.handleChange} />
         <Galleries search={search} categories={['WESTERN', 'DOUJINSHI', 'MANGA']} />
       </div>

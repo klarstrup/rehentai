@@ -6,9 +6,6 @@
 // React
 import React from 'react';
 
-// <Helmet> component for setting the page title
-import Helmet from 'react-helmet';
-
 // Routing
 import { Route, Switch } from 'react-router-dom';
 import { NotFound, Redirect } from 'kit/lib/routing';
