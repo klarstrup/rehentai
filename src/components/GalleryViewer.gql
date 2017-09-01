@@ -9,11 +9,12 @@ query Gallery($id: Int!, $token: String!) {
       pageInfo {
         total
       }
-      images(limit: 1) {
+      images {
         id
         token
         galleryId
         pageNumber
+        thumbnailUrl
         name
       }
     }

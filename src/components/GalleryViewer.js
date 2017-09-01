@@ -59,9 +59,10 @@ class GalleryViewer extends React.Component {
         title,
         tags,
         thumbnailUrl,
-        imagesPage: { images: [frontPage], pageInfo: { total } },
+        imagesPage: { images, pageInfo: { total } },
       } = {},
     } = data;
+    const frontPage = images[0];
     const tagsByNamespace = tags.reduce((accu, namespacedTag) => {
       const namespace = (namespacedTag.indexOf(':') > 0 && namespacedTag.split(':')[0]) || 'misc';
       const tag = namespacedTag.split(':')[1] || namespacedTag;
@@ -131,6 +132,14 @@ class GalleryViewer extends React.Component {
           {(imageId && imageId.split('-')[1]) || frontPage.pageNumber || 1}/{total}
           {' | '}
           <a href={`//exhentai.org/s/${imageToken}/${imageId}`}>EH</a>
+          <ul style={{ display: 'flex', overflowX: 'auto', overflowY: 'hidden' }}>
+            {images.map(image => (
+              <li key={image.id}>
+                <Link to={`/gallery/${id}/${token}/image/${image.token}/${image.id}/${total}`}>
+                  <img src={image.thumbnailUrl} alt={name} />
+                </Link>
+              </li>))}
+          </ul>
         </footer>
       </section>
     );

@@ -20,6 +20,7 @@ const globalCookies = {
   uconfig: uconfigFromObject({
     lt: 'p', // Thumbnail Settings: On page load
     pn: '1', // Show gallery page numbers: Yes
+    ts: 'l', // Large gallery thumbnails
   }),
   s: '582183e83',
 };
@@ -89,7 +90,7 @@ const idTokenPageNumberFromImageUrl = url => ({
 });
 
 const galleryFetcher = ({ id, token, page = 0 }) =>
-  fetch(`http://exhentai.org/g/${id}/${token}/?nw=always&p=${page}`).then(res =>
+  fetch(`http://exhentai.org/g/${id}/${token}/?p=${page}`).then(res =>
     res.text().then(html => {
       const $ = cheerio.load(html);
 
@@ -101,8 +102,8 @@ const galleryFetcher = ({ id, token, page = 0 }) =>
         .text()
         .split(' ')
         .slice(-2)[0];
-      const perPage = 40;
-      // const page = +$('.ptds', '.ptt').text() - 1;
+      const perPage = 20;
+      const page = +$('.ptds', '.ptt').text() - 1;
 
       return {
         id,
@@ -141,6 +142,7 @@ const galleryFetcher = ({ id, token, page = 0 }) =>
           images: $('a', '#gdt').map((i, el) => ({
             ...idTokenPageNumberFromImageUrl($(el).attr('href')),
             url: $(el).attr('href'),
+            thumbnailUrl: $('img', el).attr('src').replace('exhentai', 'ehgt'),
             name: $('img', el)
               .attr('title')
               .split(' ', 3)[2],
@@ -410,6 +412,7 @@ const typeDefs = `
     fileHeight: Int
     fileSize: Float
     fileUrl: String
+    thumbnailUrl: String
     nextImage: Image
     previousImage: Image
     firstImage: Image
