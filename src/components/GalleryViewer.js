@@ -44,13 +44,7 @@ class GalleryViewer extends React.Component {
       location: { state: { search = '' } = {} },
     } = this.props;
     if (data.loading) return <div> Loading... </div>;
-    if (data.error) {
-      return (
-        <div>
-          {data.error.message}
-        </div>
-      );
-    }
+    if (data.error) return <div>{data.error.message}</div>;
     if (!data.getGallery) return <div> No gallery found </div>;
     const {
       getGallery: {
@@ -93,22 +87,18 @@ class GalleryViewer extends React.Component {
             <a href={`//exhentai.org/g/${id}/${token}`}>EH</a>
             <hr />
             <div className={css.tags}>
-              {_.map(tagsByNamespace, (tagsOfNamespace, namespace) =>
-                (<div key={namespace}>
-                  <header>
-                    {namespace}
-                  </header>
+              {_.map(tagsByNamespace, (tagsOfNamespace, namespace) => (
+                <div key={namespace}>
+                  <header>{namespace}</header>
                   <ul>
-                    {tagsOfNamespace.map(tag =>
-                      (<li key={tag}>
-                        <Link to={`/?search=${namespace}:${tag}`}>
-                          {tag.replace(/_/g, ' ')}
-                        </Link>
-                      </li>),
-                    )}
+                    {tagsOfNamespace.map(tag => (
+                      <li key={tag}>
+                        <Link to={`/?search=${namespace}:${tag}`}>{tag.replace(/_/g, ' ')}</Link>
+                      </li>
+                    ))}
                   </ul>
-                </div>),
-              )}
+                </div>
+              ))}
             </div>
           </div>
           <Link
@@ -120,14 +110,16 @@ class GalleryViewer extends React.Component {
             X
           </Link>
         </header>
-        {imageId && imageToken
-          ? <ImageViewer
+        {imageId && imageToken ? (
+          <ImageViewer
             galleryId={id}
             galleryToken={token}
             token={imageToken}
             pageNumber={imageId.split('-')[1] - 1}
             pageTotal={total} />
-          : <ImageViewer {...frontPage} pageTotal={total} galleryToken={token} />}
+        ) : (
+          <ImageViewer {...frontPage} pageTotal={total} galleryToken={token} />
+        )}
         <footer className={css['page-position']}>
           {(imageId && imageId.split('-')[1]) || frontPage.pageNumber || 1}/{total}
           {' | '}
@@ -138,7 +130,8 @@ class GalleryViewer extends React.Component {
                 <Link to={`/gallery/${id}/${token}/image/${image.token}/${image.id}/${total}`}>
                   <img src={image.thumbnailUrl} alt={name} />
                 </Link>
-              </li>))}
+              </li>
+            ))}
           </ul>
         </footer>
       </section>
