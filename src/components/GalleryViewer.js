@@ -36,6 +36,11 @@ export const prefetchGalleryViewer = ({ id, token }, client) => () => {
   }),
 })
 class GalleryViewer extends React.Component {
+  handleScroll = e => {
+    if (e.target.scrollLeft + e.target.clientWidth === e.target.scrollWidth) {
+      console.log('this is the end');
+    }
+  };
   render() {
     const {
       data = {},
@@ -124,11 +129,16 @@ class GalleryViewer extends React.Component {
           {(imageId && imageId.split('-')[1]) || frontPage.pageNumber || 1}/{total}
           {' | '}
           <a href={`//exhentai.org/s/${imageToken}/${imageId}`}>EH</a>
-          <ul style={{ display: 'flex', overflowX: 'auto', overflowY: 'hidden' }}>
+          <ul
+            style={{ display: 'flex', overflowX: 'auto', overflowY: 'hidden', height: '150px' }}
+            onScroll={this.handleScroll}>
             {images.map(image => (
-              <li key={image.id}>
+              <li key={image.id} style={{ height: '100%', width: 'auto' }}>
                 <Link to={`/gallery/${id}/${token}/image/${image.token}/${image.id}/${total}`}>
-                  <img src={image.thumbnailUrl} alt={name} />
+                  <img
+                    src={image.thumbnailUrl}
+                    alt={name}
+                    style={{ height: '100%', width: 'auto' }} />
                 </Link>
               </li>
             ))}
