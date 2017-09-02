@@ -36,6 +36,7 @@ class GalleriesItem extends React.Component {
       search,
       client,
     } = this.props;
+    
     const heightNormalizationRatio = css.thumbnailHeight.split('px')[0] / thumbnailHeight;
     const shortTitle = title
       .replace(/{.*?}/g, '')
