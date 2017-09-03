@@ -20,17 +20,13 @@ async function preloadImage(url) {
   }),
 })
 class ImageViewer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleKey = this.handleKey.bind(this);
-  }
   componentDidMount() {
     window.addEventListener('keydown', this.handleKey);
   }
   componentWillUnmount() {
     window.removeEventListener('keydown', this.handleKey);
   }
-  handleKey({ code }) {
+  handleKey = ({ code }) => {
     const { data, galleryToken, pageTotal } = this.props;
     const { getImage: image } = data;
     if (!image) {
@@ -56,7 +52,7 @@ class ImageViewer extends React.Component {
     }
   }
   render() {
-    const { data, total, galleryToken, pageTotal } = this.props;
+    const { data, galleryToken, pageTotal } = this.props;
     const { getImage: image = {}, loading, error } = data;
     const { fileUrl, galleryId, nextImage } = image;
     if (nextImage && !SERVER) {

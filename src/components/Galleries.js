@@ -9,21 +9,9 @@ import query from './Galleries.gql';
 
 @withApollo
 class GalleriesItem extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { imageStatus: 'loading' };
-
-    this.handleImageLoaded = this.handleImageLoaded.bind(this);
-    this.handleImageErrored = this.handleImageErrored.bind(this);
-  }
-
-  handleImageLoaded() {
-    this.setState({ imageStatus: 'loaded' });
-  }
-
-  handleImageErrored() {
-    this.setState({ imageStatus: 'failed' });
-  }
+  state = { imageStatus: 'loading' };
+  handleImageLoaded = () => this.setState({ imageStatus: 'loaded' })
+  handleImageErrored = () => this.setState({ imageStatus: 'failed' });
   render() {
     const {
       id,
@@ -36,7 +24,7 @@ class GalleriesItem extends React.Component {
       search,
       client,
     } = this.props;
-    
+
     const heightNormalizationRatio = css.thumbnailHeight.split('px')[0] / thumbnailHeight;
     const shortTitle = title
       .replace(/{.*?}/g, '')
@@ -112,17 +100,13 @@ class GalleriesItem extends React.Component {
   },
 })
 class Galleries extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleScroll = this.handleScroll.bind(this);
-  }
   componentDidMount() {
     window.addEventListener('scroll', this.handleScroll);
   }
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
   }
-  handleScroll() {
+  handleScroll = ()=>{
     const windowHeight = window.innerHeight || document.documentElement.offsetHeight;
     const { body, documentElement } = document;
     const heights = [
