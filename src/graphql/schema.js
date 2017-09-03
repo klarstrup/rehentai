@@ -105,6 +105,15 @@ const galleryFetcher = ({ id, token, page = 0 }) =>
       const perPage = 20;
       const page = +$('.ptds', '.ptt').text() - 1;
 
+
+      const count = 1 +
+      $('.gpc')
+        .first()
+        .text()
+        .split(' ')[1]
+        .split('-')
+        .reduce((acc, val) => val - acc);
+
       return {
         id,
         token,
@@ -134,6 +143,7 @@ const galleryFetcher = ({ id, token, page = 0 }) =>
         imagesPage: {
           pageInfo: {
             total,
+            count: $('a', '#gdt').length,
             page,
             perPage,
             hasNextPage: Math.ceil(total / perPage) - 1 > page,

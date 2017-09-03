@@ -59,7 +59,9 @@ class ImageViewer extends React.Component {
     const { data, total, galleryToken, pageTotal } = this.props;
     const { getImage: image = {}, loading, error } = data;
     const { fileUrl, galleryId, nextImage } = image;
-    nextImage && !SERVER && preloadImage(nextImage.fileUrl);
+    if (nextImage && !SERVER) {
+      preloadImage(nextImage.fileUrl);
+    }
     const nextLink =
       nextImage && `/gallery/${galleryId}/${galleryToken}/image/${nextImage.token}/${nextImage.id}/${pageTotal}`;
 

@@ -4,6 +4,7 @@ query Gallery($id: Int!, $token: String!) {
     token
     title
     tags
+    category
     thumbnailUrl
     imagesPage {
       pageInfo {
