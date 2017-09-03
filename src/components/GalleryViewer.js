@@ -36,6 +36,20 @@ export const prefetchGalleryViewer = ({ id, token }, client) => () => {
   }),
 })
 class GalleryViewer extends React.Component {
+  componentDidMount() {
+    window.addEventListener('keydown', this.handleKey);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.handleKey);
+  }
+  handleKey = ({ code }) => {
+    const {
+      location: { state: { search = '' } = {} },
+    } = this.props;
+    if (code === 'Escape') {
+      this.props.history.push(`/?search=${search}`, this.props.location.state);
+    }
+  }
   handleScroll = e => {
     if (e.target.scrollLeft + e.target.clientWidth === e.target.scrollWidth) {
       console.log('this is the end');
