@@ -378,6 +378,9 @@ const typeDefs = `
     getImage(galleryId: Int!, token: String!, pageNumber: Int!): Image
     getCategories: [Category]
   }
+  type Mutation {
+    refreshImage(galleryId: Int!, token: String!, pageNumber: Int!): Image
+  }
   type Gallery {
     id: Int
     token: String
@@ -449,6 +452,12 @@ const resolvers = {
     getImage: (root, { galleryId, token, pageNumber }) =>
       imageLoader.load({ galleryId, token, pageNumber }),
     getCategories: () => Object.keys(categoryEnumQueryFieldMap),
+  },
+  Mutation: {
+    refreshImage: (root, { galleryId, token, pageNumber }) =>
+      imageLoader
+        .clear({ galleryId, token, pageNumber })
+        .load({ galleryId, token, pageNumber }),
   },
   Gallery: {
     //    __typeName: (w,t,f,{ parentType })=>''+JSON.stringify(parentType),

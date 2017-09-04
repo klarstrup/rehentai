@@ -3,11 +3,8 @@ import { graphql } from 'react-apollo';
 import { Link, withRouter } from 'react-router-dom';
 
 import query from './ImageViewer.gql';
+import refreshMutation from './ImageViewerRefresh.gql';
 import css from './ImageViewer.scss';
-
-async function preloadImage(url) {
-  new Image().src = url;
-}
 
 @withRouter
 @graphql(query, {
@@ -17,6 +14,12 @@ async function preloadImage(url) {
       token,
       pageNumber,
     },
+  }),
+})
+@graphql(refreshMutation, {
+  props: ({ mutate }) => ({
+    refreshImage: ({ galleryId, token, pageNumber }) =>
+      mutate({ variables: { galleryId, token, pageNumber } }),
   }),
 })
 class ImageViewer extends React.Component {
@@ -50,13 +53,25 @@ class ImageViewer extends React.Component {
       default:
         break;
     }
-  }
+  };
+  preloadImage = url => {
+    const image = new Image();
+    image.src = url;
+    image.onload = e => console.log(`loaded ${url}`, JSON.stringify(e));
+    image.onerror = e => {
+      console.log(`failed ${url}`, JSON.stringify(e));
+      this.props.refreshImage(this.props.getImage);
+    };
+  };
   render() {
     const { data, galleryToken, pageTotal } = this.props;
     const { getImage: image = {}, loading, error } = data;
     const { fileUrl, galleryId, nextImage } = image;
+    if (!SERVER && fileUrl) {
+      this.preloadImage(fileUrl);
+    }
     if (nextImage && !SERVER) {
-      preloadImage(nextImage.fileUrl);
+      this.preloadImage(nextImage.fileUrl);
     }
     const nextLink =
       nextImage && `/gallery/${galleryId}/${galleryToken}/image/${nextImage.token}/${nextImage.id}/${pageTotal}`;

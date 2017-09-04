@@ -1,0 +1,26 @@
+mutation Image($galleryId: Int!, $token: String!, $pageNumber: Int!) {
+  refreshImage(galleryId: $galleryId, token: $token, pageNumber: $pageNumber) {
+    id
+    galleryId
+    token
+    pageNumber
+    name
+    fileUrl
+    fileHeight
+    fileWidth
+    previousImage {
+      id
+      galleryId
+      token
+      pageNumber
+      fileUrl
+    }
+    nextImage {
+      id
+      galleryId
+      token
+      pageNumber
+      fileUrl
+    }
+  }
+}
