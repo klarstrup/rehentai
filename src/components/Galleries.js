@@ -128,15 +128,15 @@ class Galleries extends React.Component {
       search,
     } = this.props;
     if (loading && !galleries) return <div> Loading... </div>;
-    return (
+    return [
+      <div className={css.pageInfo}>
+        {total && `${total} results`}
+      </div>,
+      <hr />,
       <div className={css.galleries}>
-        <div className={css.pageInfo}>
-          {total} results
-          <hr />
-        </div>
         {galleries.map(gallery => <GalleriesItem key={gallery.id} {...gallery} search={search} />)}
-      </div>
-    );
+      </div>,
+    ];
   }
 }
 
