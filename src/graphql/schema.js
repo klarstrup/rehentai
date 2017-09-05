@@ -385,7 +385,7 @@ const typeDefs = `
     id: Int
     token: String
     title: String
-    published: String
+    published: Float
     category: Category
     uploader: String
     stars: Float
