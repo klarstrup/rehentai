@@ -28,10 +28,13 @@ class Front extends React.PureComponent {
     this.updateUrl(search.trim());
   }
   updateUrl(search) {
-    if (search) {
-      this.props.history.push(`/?search=${search}`);
-    } else {
-      this.props.history.push('/');
+    const urlSearch = new URLSearchParams(this.props.location.search).get('search');
+    if (search !== urlSearch) {
+      if (search) {
+        this.props.history.push(`/?search=${search}`);
+      } else {
+        this.props.history.push('/');
+      }
     }
   }
   render() {
