@@ -47,6 +47,7 @@ class ImageViewer extends React.Component {
         this.props.history.push(galleryUrl + previousImageSubUrl, this.props.location.state);
         break;
       case 'ArrowRight':
+      case 'Space':
       case 'KeyD':
         this.props.history.push(galleryUrl + nextImageSubUrl, this.props.location.state);
         break;
