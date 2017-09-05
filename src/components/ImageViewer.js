@@ -61,7 +61,7 @@ class ImageViewer extends React.Component {
     image.onload = e => console.log(`loaded ${url}`, JSON.stringify(e));
     image.onerror = e => {
       console.log(`failed ${url}`, JSON.stringify(e));
-      this.props.refreshImage(this.props.getImage);
+      this.props.refreshImage(this.props.data.getImage);
     };
   };
   render() {
