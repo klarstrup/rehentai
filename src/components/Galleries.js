@@ -10,7 +10,7 @@ import query from './Galleries.gql';
 @withApollo
 class GalleriesItem extends React.Component {
   state = { imageStatus: 'loading' };
-  handleImageLoaded = () => this.setState({ imageStatus: 'loaded' })
+  handleImageLoaded = () => this.setState({ imageStatus: 'loaded' });
   handleImageErrored = () => this.setState({ imageStatus: 'failed' });
   render() {
     const {
@@ -33,6 +33,15 @@ class GalleriesItem extends React.Component {
       .replace(/\(.*?\)/g, '')
       .replace('-', '‑');
     const shorterTitle = shortTitle.split(' | ')[1] || shortTitle;
+
+    const stateStyle = {
+      opacity: +(
+        SERVER ||
+        this.state.imageStatus === 'loaded' ||
+        this.state.imageStatus === 'failed'
+      ),
+      background: this.state.imageStatus === 'failed' && 'red',
+    };
     return (
       <Link
         to={{
@@ -42,20 +51,17 @@ class GalleriesItem extends React.Component {
         onMouseOver={(() => {}) || prefetchGalleryViewer({ id, token }, client)}
         style={{
           width: thumbnailWidth * heightNormalizationRatio,
-          opacity: +(
-            SERVER ||
-            this.state.imageStatus === 'loaded' ||
-            this.state.imageStatus === 'failed'
-          ),
-          background: this.state.imageStatus === 'failed' && 'red',
         }}>
         <img
           alt={title}
           src={thumbnailUrl}
+          style={stateStyle}
           className={favorite ? css.favorite : ''}
           onLoad={this.handleImageLoaded}
           onError={this.handleImageErrored} />
-        <div className={css['gallery-title']}>{shorterTitle}</div>
+        <div className={css['gallery-title']} style={stateStyle}>
+          {shorterTitle}
+        </div>
       </Link>
     );
   }
@@ -106,7 +112,7 @@ class Galleries extends React.Component {
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
   }
-  handleScroll = ()=>{
+  handleScroll = () => {
     const windowHeight = window.innerHeight || document.documentElement.offsetHeight;
     const { body, documentElement } = document;
     const heights = [
@@ -121,7 +127,7 @@ class Galleries extends React.Component {
     if (windowBottom >= docHeight) {
       this.props.data.loadMoreEntries();
     }
-  }
+  };
   render() {
     const {
       data: { loading, getGalleries: { galleries = [], pageInfo: { total } = {} } = {} },
@@ -129,11 +135,11 @@ class Galleries extends React.Component {
     } = this.props;
     if (loading && !galleries) return <div> Loading... </div>;
     return [
-      <div className={css.pageInfo}>
+      <div className={css.pageInfo} key={0}>
         {total && `${total} results`}
       </div>,
-      <hr />,
-      <div className={css.galleries}>
+      <hr key={1} />,
+      <div className={css.galleries} key={2}>
         {galleries.map(gallery => <GalleriesItem key={gallery.id} {...gallery} search={search} />)}
       </div>,
     ];
