@@ -134,7 +134,7 @@ const galleryFetcher = ({ id, token, page = 0 }) =>
           .attr('href')
           .split('/')
           .slice(-1)[0],
-        published: Date("{$('.gdt2').first().text()} EDT"),
+        published: Date.parse(`${$('.gdt2').first().text()} EDT`),
         tags: $('a', '#taglist').map((i, el) =>
           $(el)
             .attr('id')
@@ -336,7 +336,7 @@ const galleriesFetcher = galleryFilterQueryString =>
               thumbnailWidth: $('.it2', el)
                 .css('width')
                 .split('px')[0],
-              published: Date("{$('.itd', el).first().text()} EDT"),
+              published: Date.parse(`${$('.itd', el).first().text()} EDT`),
               stars: backgroundPositionToStars($('.it4r', el).css('background-position')),
             }))
             .get() || [],
