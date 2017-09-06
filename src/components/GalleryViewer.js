@@ -221,7 +221,7 @@ class GalleryViewer extends React.Component {
                   <Link to={`/gallery/${id}/${token}/image/${image.token}/${image.id}/${total}`}>
                     <img
                       src={image.thumbnailUrl}
-                      alt={name}
+                      alt={image.name}
                       style={{
                         height: '100%',
                         width: 'auto',
