@@ -177,9 +177,7 @@ class GalleryViewer extends React.Component {
             </div>
             <Link
               className={css['front-link']}
-              to={{
-                pathname: search ? `/?search=${search}` : '/',
-              }}>
+              to={search ? `/?search=${search}` : '/'}>
               X
             </Link>
           </header>
