@@ -4,8 +4,6 @@ import { graphql } from 'react-apollo';
 import { Link, withRouter } from 'react-router-dom';
 import _ from 'lodash';
 
-// import { client } from 'kit/entry/browser';
-
 import ImageViewer from './ImageViewer';
 
 import query from './GalleryViewer.gql';
