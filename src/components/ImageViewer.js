@@ -32,7 +32,6 @@ class ImageViewer extends React.Component {
   handleKey = ({ code }) => {
     const { data, galleryToken, pageTotal, isPreview, pageNumber } = this.props;
     const { getImage: image } = data;
-    console.log( this.props);
     if (!image) {
       return;
     }
