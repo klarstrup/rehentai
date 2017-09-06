@@ -40,7 +40,7 @@ class Front extends React.PureComponent {
   render() {
     const search = new URLSearchParams(this.props.location.search).get('search');
     return (
-      <div>
+      <section style={{ position: 'absolute', left: 0, right: 0, top: 0 }}>
         <Helmet
           title={`${(search && `${search} - `) || ''}Rehentai`}
           meta={[
@@ -51,7 +51,7 @@ class Front extends React.PureComponent {
           ]} />
         <input type="text" value={this.state.search} onChange={this.handleChange} />
         <Galleries search={search} categories={['DOUJINSHI', 'MANGA', 'WESTERN']} />
-      </div>
+      </section>
     );
   }
 }
