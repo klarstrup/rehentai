@@ -34,25 +34,80 @@ export const prefetchGalleryViewer = ({ id, token }, client) => () => {
       token,
     },
   }),
+  props: props => ({
+    ...props,
+    data: {
+      ...props.data,
+      loadMoreEntries: () =>
+        props.data.getGallery.imagesPage.pageInfo.hasNextPage &&
+        props.data.fetchMore({
+          variables: {
+            page: props.data.getGallery.imagesPage.pageInfo.page + 1,
+          },
+          updateQuery: (previousResult, { fetchMoreResult }) => {
+            console.log(
+              previousResult.getGallery.imagesPage.pageInfo.page,
+              fetchMoreResult.getGallery.imagesPage.pageInfo.page,
+            );
+            if (
+              !fetchMoreResult ||
+              previousResult.getGallery.imagesPage.pageInfo.page ===
+                fetchMoreResult.getGallery.imagesPage.pageInfo.page
+            ) {
+              return previousResult;
+            }
+            return _.set(_.cloneDeep(fetchMoreResult), 'getGallery.imagesPage.images', [
+              ...previousResult.getGallery.imagesPage.images,
+              ...fetchMoreResult.getGallery.imagesPage.images,
+            ]);
+          },
+        }),
+    },
+  }),
 })
 class GalleryViewer extends React.Component {
   componentDidMount() {
     window.addEventListener('keydown', this.handleKey);
+    this.focusThumbsList();
+  }
+  componentDidUpdate() {
+    this.focusThumbsList();
   }
   componentWillUnmount() {
     window.removeEventListener('keydown', this.handleKey);
   }
+  thumbsList = null;
+  focusThumbsList = () => {
+    const { thumbsList, thumbsListCurrent } = this;
+    if (thumbsList) {
+      // If there's no current thumb it means that we need to load more until we get it
+      // We can calculate and handle the loading better but this will do for now
+      if (!thumbsListCurrent) {
+        this.props.data.loadMoreEntries();
+      } else {
+        const { width: thumbsListWidth } = thumbsList.getBoundingClientRect();
+        const {
+          width: thumbsListCurrentWidth,
+          left: thumbsListCurrentLeft,
+        } = thumbsListCurrent.getBoundingClientRect();
+
+        thumbsList.scrollLeft =
+          thumbsList.scrollLeft +
+          thumbsListCurrentLeft -
+          thumbsListWidth / 2 +
+          thumbsListCurrentWidth / 2;
+      }
+    }
+  };
   handleKey = ({ code }) => {
-    const {
-      location: { state: { search = '' } = {} },
-    } = this.props;
+    const { location: { state: { search = '' } = {} } } = this.props;
     if (code === 'Escape') {
       this.props.history.push(`/?search=${search}`, this.props.location.state);
     }
-  }
+  };
   handleScroll = e => {
-    if (e.target.scrollLeft + e.target.clientWidth === e.target.scrollWidth) {
-      console.log('this is the end');
+    if (e.target.scrollLeft + e.target.clientWidth >= e.target.scrollWidth) {
+      this.props.data.loadMoreEntries();
     }
   };
   render() {
@@ -76,6 +131,7 @@ class GalleryViewer extends React.Component {
       } = {},
     } = data;
     const frontPage = images[0];
+    const pageNumber = imageId ? imageId.split('-')[1] - 1 : 0;
     const tagsByNamespace = tags.reduce((accu, namespacedTag) => {
       const namespace = (namespacedTag.indexOf(':') > 0 && namespacedTag.split(':')[0]) || 'misc';
       const tag = namespacedTag.split(':')[1] || namespacedTag;
@@ -134,7 +190,7 @@ class GalleryViewer extends React.Component {
             galleryId={id}
             galleryToken={token}
             token={imageToken}
-            pageNumber={imageId.split('-')[1] - 1}
+            pageNumber={pageNumber}
             pageTotal={total} />
         ) : (
           <ImageViewer {...frontPage} pageTotal={total} galleryToken={token} />
@@ -144,15 +200,30 @@ class GalleryViewer extends React.Component {
           {' | '}
           <a href={`//exhentai.org/s/${imageToken}/${imageId}`}>EH</a>
           <ul
-            style={{ display: 'flex', overflowX: 'auto', overflowY: 'hidden', height: '150px' }}
-            onScroll={this.handleScroll}>
+            style={{ display: 'flex', overflowX: 'scroll', overflowY: 'hidden', height: '150px' }}
+            onScroll={this.handleScroll}
+            ref={thumbsList => {
+              this.thumbsList = thumbsList;
+            }}>
             {images.map(image => (
-              <li key={image.id} style={{ height: '100%', width: 'auto' }}>
+              <li
+                key={image.id}
+                ref={
+                  image.pageNumber === pageNumber &&
+                  (thumbsListCurrent => {
+                    this.thumbsListCurrent = thumbsListCurrent;
+                  })
+                }
+                style={{ height: '100%', width: 'auto' }}>
                 <Link to={`/gallery/${id}/${token}/image/${image.token}/${image.id}/${total}`}>
                   <img
                     src={image.thumbnailUrl}
                     alt={name}
-                    style={{ height: '100%', width: 'auto' }} />
+                    style={{
+                      height: '100%',
+                      width: 'auto',
+                      opacity: pageNumber === image.pageNumber ? 0.5 : 1,
+                    }} />
                 </Link>
               </li>
             ))}

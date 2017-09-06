@@ -1,4 +1,4 @@
-query Gallery($id: Int!, $token: String!) {
+query Gallery($id: Int!, $token: String!, $page: Int=0) {
   getGallery(id: $id, token: $token) {
     id
     token
@@ -6,9 +6,11 @@ query Gallery($id: Int!, $token: String!) {
     tags
     category
     thumbnailUrl
-    imagesPage {
+    imagesPage(page: $page) {
       pageInfo {
         total
+        hasNextPage
+        page
       }
       images {
         id
