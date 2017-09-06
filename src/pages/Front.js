@@ -26,7 +26,7 @@ class Front extends React.PureComponent {
     const search = event.target.value;
     this.setState({ search });
     this.updateUrl(search.trim());
-  }
+  };
   updateUrl(search) {
     const urlSearch = new URLSearchParams(this.props.location.search).get('search');
     if (search !== urlSearch) {
@@ -50,7 +50,7 @@ class Front extends React.PureComponent {
             },
           ]} />
         <input type="text" value={this.state.search} onChange={this.handleChange} />
-        <Galleries search={search} categories={['DOUJINSHI', 'MANGA']} />
+        <Galleries search={search} categories={['DOUJINSHI', 'MANGA', 'WESTERN']} />
       </div>
     );
   }
