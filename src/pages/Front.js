@@ -40,7 +40,7 @@ class Front extends React.PureComponent {
   render() {
     const search = new URLSearchParams(this.props.location.search).get('search');
     return (
-      <section style={{ position: 'absolute', left: 0, right: 0, top: 0 }}>
+      <section>
         <Helmet
           title={`${(search && `${search} - `) || ''}Rehentai`}
           meta={[
