@@ -13,8 +13,6 @@ import process from 'process';
 
 import spjaeld from 'spjaeld';
 
-console.log(spjaeld);
-
 require('dotenv').config({ path: `${__dirname}/../.env` });
 
 const uconfigFromObject = R.compose(R.join('-'), R.map(R.join('_')), R.toPairs);
