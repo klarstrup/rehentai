@@ -11,6 +11,10 @@ import R from 'ramda';
 import DataLoader from 'dataloader';
 import process from 'process';
 
+import spjaeld from 'spjaeld';
+
+console.log(spjaeld);
+
 require('dotenv').config({ path: `${__dirname}/../.env` });
 
 const uconfigFromObject = R.compose(R.join('-'), R.map(R.join('_')), R.toPairs);
@@ -27,7 +31,7 @@ const globalCookies = {
 
 const cookieStringFromObject = R.compose(R.join('; '), R.map(R.join('=')), R.toPairs);
 
-const fetch = async (url, options = {}) => {
+const fetch = spjaeld(async (url, options = {}) => {
   const start = new Date();
   const result = await nodeFetch(url, {
     credentials: 'include',
@@ -36,12 +40,12 @@ const fetch = async (url, options = {}) => {
       cookie: cookieStringFromObject(globalCookies),
       ...options.headers,
     },
-  })
+  });
   const end = new Date() - start;
   console.log(`GET ${url} ${result.status}, %dms`, end);
 
   return result;
-}
+}, 200);
 
 const logOnToEH = async (UserName, PassWord) => {
   const loginResponse = await fetch(
@@ -73,7 +77,7 @@ const logOnToEH = async (UserName, PassWord) => {
 };
 
 const { EXHENTAI_USERNAME, EXHENTAI_PASSWORD } = process.env;
-logOnToEH(EXHENTAI_USERNAME, EXHENTAI_PASSWORD).then(res => console.log('Signed into EH'));
+logOnToEH(EXHENTAI_USERNAME, EXHENTAI_PASSWORD).then(() => console.log('Signed into EH'));
 
 const idTokenPageNumberFromImageUrl = url => ({
   id: url.split('/').slice(-1)[0],
@@ -104,15 +108,6 @@ const galleryFetcher = ({ id, token, page = 0 }) =>
         .slice(-2)[0];
       const perPage = 20;
       const page = +$('.ptds', '.ptt').text() - 1;
-
-
-      const count = 1 +
-      $('.gpc')
-        .first()
-        .text()
-        .split(' ')[1]
-        .split('-')
-        .reduce((acc, val) => val - acc);
 
       return {
         id,

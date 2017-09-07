@@ -114,6 +114,7 @@
     "regenerator-runtime": "^0.11.0",
     "reset-css": "^2.2.1",
     "seamless-immutable": "^7.1.2",
+    "spjaeld": "0.0.9",
     "url-search-params": "^0.10.0"
   },
   "engines": {
