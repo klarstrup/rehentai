@@ -124,7 +124,6 @@ class GalleryViewer extends React.Component {
       loading = false,
     } = data;
     const frontPage = images[0];
-    images.push('penus');
     const isPreview = !imageId;
     const overlayStyle = isPreview ? { opacity: 1 } : {};
     const pageNumber = imageId ? imageId.split('-')[1] - 1 : 0;
