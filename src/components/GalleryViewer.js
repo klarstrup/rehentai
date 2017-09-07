@@ -2,7 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { graphql } from 'react-apollo';
 import { Link, withRouter } from 'react-router-dom';
-import _ from 'lodash';
+import R from 'ramda';
 
 import ImageViewer from './ImageViewer';
 
@@ -55,10 +55,10 @@ export const prefetchGalleryViewer = ({ id, token }, client) => () => {
             ) {
               return previousResult;
             }
-            return _.set(_.cloneDeep(fetchMoreResult), 'getGallery.imagesPage.images', [
+            return R.set(R.lensPath(['getGallery', 'imagesPage', 'images']), [
               ...previousResult.getGallery.imagesPage.images,
               ...fetchMoreResult.getGallery.imagesPage.images,
-            ]);
+            ], R.clone(fetchMoreResult));
           },
         }),
     },
@@ -161,7 +161,7 @@ class GalleryViewer extends React.Component {
               <a href={`//exhentai.org/g/${id}/${token}`}>EH</a>
               <hr />
               <div className={css.tags}>
-                {_.map(tagsByNamespace, (tagsOfNamespace, namespace) => (
+                {R.toPairs(tagsByNamespace).map(([namespace, tagsOfNamespace]) => (
                   <div key={namespace}>
                     <header>{namespace}</header>
                     <ul>
@@ -182,7 +182,7 @@ class GalleryViewer extends React.Component {
             </Link>
           </header>
         )}
-        {imageId && imageToken ? (
+        {imageId && imageToken && id && token ? (
           <ImageViewer
             galleryId={id}
             galleryToken={token}
@@ -191,7 +191,7 @@ class GalleryViewer extends React.Component {
             isPreview={isPreview}
             pageTotal={total} />
         ) : (
-          <ImageViewer {...frontPage} isPreview={isPreview} pageTotal={total} galleryToken={token} />
+          frontPage && <ImageViewer {...frontPage} isPreview={isPreview} pageTotal={total} galleryToken={token} />
         )}
         {loading ? (
           <footer style={{ ...overlayStyle }}>Loading...</footer>

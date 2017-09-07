@@ -72,6 +72,8 @@ export default new WebpackConfig().extend('[root]/base.js').merge({
                 'transform-regenerator',
                 'transform-class-properties',
                 'transform-decorators-legacy',
+                'ramda',
+                'lodash',
               ],
             },
           },

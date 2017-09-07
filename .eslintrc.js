@@ -28,6 +28,7 @@ module.exports = {
     'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
     'react/prefer-stateless-function': [2, { ignorePureComponents: true }],
     'react/no-multi-comp': 0,
+    'react/no-array-index-key': 0,
     'react/jsx-closing-bracket-location': [1, 'after-props'],
     'react/prop-types': [1, {
       ignore: [
