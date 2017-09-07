@@ -48,13 +48,14 @@ export const prefetchGalleryViewer = ({ id, token }, client) => () => {
               R.lensPath(['getGallery', 'imagesPage', 'pageInfo', 'page']),
             );
             const resultImagesLens = R.lensPath(['getGallery', 'imagesPage', 'images']);
+            const getResultImages = R.view(resultImagesLens);
 
             if (!fetchMoreResult || R.eqBy(getResultPageNumber)(previousResult, fetchMoreResult)) {
               return previousResult;
             }
             return R.set(
               resultImagesLens,
-              [...R.view(previousResult), ...R.view(fetchMoreResult)],
+              R.concat(getResultImages(previousResult), getResultImages(fetchMoreResult)),
               R.clone(fetchMoreResult),
             );
           },
@@ -123,6 +124,7 @@ class GalleryViewer extends React.Component {
       loading = false,
     } = data;
     const frontPage = images[0];
+    images.push('penus');
     const isPreview = !imageId;
     const overlayStyle = isPreview ? { opacity: 1 } : {};
     const pageNumber = imageId ? imageId.split('-')[1] - 1 : 0;
