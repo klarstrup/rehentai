@@ -2,7 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { withRouter } from 'react-router-dom';
 import URLSearchParams from 'url-search-params';
-import _ from 'lodash';
+import debounce from 'lodash.debounce';
 
 import Galleries from '../components/Galleries';
 
@@ -14,7 +14,7 @@ class Front extends React.PureComponent {
     this.state = { search };
 
     this.handleChange = this.handleChange.bind(this);
-    this.updateUrl = _.debounce(this.updateUrl, 500, { leading: true });
+    this.updateUrl = debounce(this.updateUrl, 500, { leading: true });
   }
   componentWillReceiveProps(newProps) {
     this.setState(state => ({

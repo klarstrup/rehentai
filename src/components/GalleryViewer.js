@@ -44,21 +44,19 @@ export const prefetchGalleryViewer = ({ id, token }, client) => () => {
             page: props.data.getGallery.imagesPage.pageInfo.page + 1,
           },
           updateQuery: (previousResult, { fetchMoreResult }) => {
-            console.log(
-              previousResult.getGallery.imagesPage.pageInfo.page,
-              fetchMoreResult.getGallery.imagesPage.pageInfo.page,
+            const getResultPageNumber = R.view(
+              R.lensPath(['getGallery', 'imagesPage', 'pageInfo', 'page']),
             );
-            if (
-              !fetchMoreResult ||
-              previousResult.getGallery.imagesPage.pageInfo.page ===
-                fetchMoreResult.getGallery.imagesPage.pageInfo.page
-            ) {
+            const resultImagesLens = R.lensPath(['getGallery', 'imagesPage', 'images']);
+
+            if (!fetchMoreResult || R.eqBy(getResultPageNumber)(previousResult, fetchMoreResult)) {
               return previousResult;
             }
-            return R.set(R.lensPath(['getGallery', 'imagesPage', 'images']), [
-              ...previousResult.getGallery.imagesPage.images,
-              ...fetchMoreResult.getGallery.imagesPage.images,
-            ], R.clone(fetchMoreResult));
+            return R.set(
+              resultImagesLens,
+              [...R.view(previousResult), ...R.view(fetchMoreResult)],
+              R.clone(fetchMoreResult),
+            );
           },
         }),
     },
@@ -175,9 +173,7 @@ class GalleryViewer extends React.Component {
                 ))}
               </div>
             </div>
-            <Link
-              className={css['front-link']}
-              to={search ? `/?search=${search}` : '/'}>
+            <Link className={css['front-link']} to={search ? `/?search=${search}` : '/'}>
               X
             </Link>
           </header>
@@ -191,7 +187,13 @@ class GalleryViewer extends React.Component {
             isPreview={isPreview}
             pageTotal={total} />
         ) : (
-          frontPage && <ImageViewer {...frontPage} isPreview={isPreview} pageTotal={total} galleryToken={token} />
+          frontPage && (
+            <ImageViewer
+              {...frontPage}
+              isPreview={isPreview}
+              pageTotal={total}
+              galleryToken={token} />
+          )
         )}
         {loading ? (
           <footer style={{ ...overlayStyle }}>Loading...</footer>
