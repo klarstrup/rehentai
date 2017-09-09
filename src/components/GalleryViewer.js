@@ -9,6 +9,8 @@ import ImageViewer from './ImageViewer';
 import query from './GalleryViewer.gql';
 import css from './GalleryViewer.scss';
 
+import ehFavicon from './GalleryViewer-eh-favicon.png';
+
 function preloadImage(url) {
   new Image().src = url;
 }
@@ -157,7 +159,7 @@ class GalleryViewer extends React.Component {
                 {title}
               </Link>
               {' | '}
-              <a href={`//exhentai.org/g/${id}/${token}`}>EH</a>
+              <a href={`//exhentai.org/g/${id}/${token}`}><img src={ehFavicon} alt='EH Logo' /></a>
               <hr />
               <div className={css.tags}>
                 {R.toPairs(tagsByNamespace).map(([namespace, tagsOfNamespace]) => (
@@ -202,7 +204,7 @@ class GalleryViewer extends React.Component {
           <footer className={css['page-position']} style={{ ...overlayStyle }}>
             {(imageId && imageId.split('-')[1]) || frontPage.pageNumber || 1}/{total}
             {' | '}
-            <a href={`//exhentai.org/s/${imageToken}/${imageId}`}>EH</a>
+            <a href={`//exhentai.org/s/${imageToken}/${imageId}`}><img src={ehFavicon} alt='EH Logo' /></a>
             <ul
               style={{ display: 'flex', overflowX: 'scroll', overflowY: 'hidden', height: '150px' }}
               onScroll={this.handleScroll}
