@@ -2,23 +2,17 @@
   "version": "2.6.0",
   "private": true,
   "scripts": {
-    "browser":
-      "cross-env NODE_ENV=development WEBPACK_CONFIG=browser_dev webpack-dev-server --open",
-    "build":
-      "cross-env NODE_ENV=production WEBPACK_CONFIG=browser_prod,server_prod webpack --colors",
-    "build-analyze":
-      "cross-env BUNDLE_ANALYZER=1 NODE_ENV=production WEBPACK_CONFIG=browser_prod,server_prod webpack --colors",
-    "build-browser":
-      "cross-env NODE_ENV=production WEBPACK_CONFIG=browser_prod webpack --colors",
+    "browser": "cross-env NODE_ENV=development WEBPACK_CONFIG=browser_dev webpack-dev-server --open",
+    "build": "cross-env NODE_ENV=production WEBPACK_CONFIG=browser_prod,server_prod webpack --colors",
+    "build-analyze": "cross-env BUNDLE_ANALYZER=1 NODE_ENV=production WEBPACK_CONFIG=browser_prod,server_prod webpack --colors",
+    "build-browser": "cross-env NODE_ENV=production WEBPACK_CONFIG=browser_prod webpack --colors",
     "build-run": "npm run build && npm run server",
-    "build-static":
-      "cross-env NODE_ENV=production WEBPACK_CONFIG=static webpack --colors",
+    "build-static": "cross-env NODE_ENV=production WEBPACK_CONFIG=static webpack --colors",
     "build-static-run": "npm run build-static && npm run static",
     "clean": "rimraf dist",
     "lint": "eslint .",
     "server": "node dist/server",
-    "server-dev":
-      "cross-env NODE_ENV=development WEBPACK_CONFIG=server_dev webpack --colors",
+    "server-dev": "cross-env NODE_ENV=development WEBPACK_CONFIG=server_dev webpack --colors",
     "start": "run-p browser server-dev",
     "static": "serve -s dist/public",
     "test": "jest"
@@ -102,6 +96,7 @@
     "koa-router": "^7.2.1",
     "koa-send": "^4.1.0",
     "koa-sslify": "^2.1.2",
+    "lodash": "^4.17.4",
     "lodash.debounce": "^4.0.8",
     "microseconds": "^0.1.0",
     "node-fetch": "^1.7.2",
@@ -124,5 +119,8 @@
     "spjaeld": "0.0.9",
     "url-search-params": "^0.10.0"
   },
-  "engines": { "node": ">=7", "npm": ">=4" }
+  "engines": {
+    "node": ">=7",
+    "npm": ">=4"
+  }
 }
