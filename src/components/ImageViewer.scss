@@ -18,8 +18,9 @@
   &::before, &::after {
     content: '';
     position: absolute;
-    height: 100%;
     width: 1vw;
+    top: 0;
+    bottom: 0;
     cursor: none;
   }
   &::before {
