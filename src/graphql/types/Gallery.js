@@ -56,7 +56,9 @@ const galleryFetcher = ({ id, token, page = 0 }) =>
       const total = +$('.gpc')
         .text()
         .split(' ')
-        .slice(-2)[0];
+        .slice(-2)[0]
+        .replace(',', '');
+
       const perPage = 20;
 
       return {
