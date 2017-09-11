@@ -140,7 +140,7 @@ class Galleries extends React.Component {
     const dismissedCount = galleries.filter(R.prop('dismissed')).length;
     return [
       <div className={css.pageInfo} key={0}>
-        {total && `${total} results, showing ${galleries.length - dismissedCount}`}{dismissedCount ? `, ${dismissedCount} were dismissed` : ''}
+        {total && `${total} results, ${galleries.length - dismissedCount} shown`}{dismissedCount ? `, ${dismissedCount} dismissed` : ''}
       </div>,
       <hr key={1} />,
       <div className={css.galleries} key={2}>
