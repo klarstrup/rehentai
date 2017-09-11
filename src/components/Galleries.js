@@ -1,7 +1,7 @@
 import React from 'react';
 import { graphql, withApollo } from 'react-apollo';
 import { Link } from 'react-router-dom';
-
+import R from 'ramda';
 import { prefetchGalleryViewer } from './GalleryViewer';
 
 import css from './Galleries.scss';
@@ -21,6 +21,7 @@ class GalleriesItem extends React.Component {
       thumbnailWidth,
       thumbnailHeight,
       favorite,
+      dismissed,
       search,
       client,
     } = this.props;
@@ -51,6 +52,7 @@ class GalleriesItem extends React.Component {
         onMouseOver={(() => {}) || prefetchGalleryViewer({ id, token }, client)}
         style={{
           width: thumbnailWidth * heightNormalizationRatio,
+          display: dismissed && 'none',
         }}>
         <img
           alt={title}
@@ -134,9 +136,10 @@ class Galleries extends React.Component {
       search,
     } = this.props;
     if (loading && !galleries) return <div> Loading... </div>;
+    const dismissedCount = galleries.filter(R.prop('dismissed')).length;
     return [
       <div className={css.pageInfo} key={0}>
-        {total && `${total} results`}
+        {total && `${total} results, showing ${galleries.length - dismissedCount}`}{dismissedCount ? `, ${dismissedCount} were dismissed` : ''}
       </div>,
       <hr key={1} />,
       <div className={css.galleries} key={2}>
