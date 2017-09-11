@@ -62,8 +62,15 @@ const imageLoader = new DataLoader(idTokenPairs => Promise.all(idTokenPairs.map(
     JSON.stringify({ galleryId, token, pageNumber }),
 });
 
-const someFunction = key => obj => {
+const someFunction = () => (obj, dunno, context, ast) => {
+  const { path: { key },fieldNodes: [{ selectionSet: { selections } }] } = ast;
+  const wantedFields = selections.map(f=>f.name.value).filter(f=>f!=='__typename');
+
   if (obj[key]) {
+    if (R.all(f=>R.contains(f)(Object.keys(obj[key])))(wantedFields)) {
+      return obj[key];
+    }
+
     return imageLoader.load(obj[key]);
   }
   const { galleryId, token, pageNumber } = obj;
