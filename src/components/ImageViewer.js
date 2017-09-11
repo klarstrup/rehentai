@@ -1,5 +1,5 @@
 import React from 'react';
-import { graphql } from 'react-apollo';
+import { graphql, withApollo } from 'react-apollo';
 import { Link, withRouter } from 'react-router-dom';
 
 import query from './ImageViewer.gql';
@@ -22,6 +22,7 @@ import css from './ImageViewer.scss';
       mutate({ variables: { galleryId, token, pageNumber } }),
   }),
 })
+@withApollo
 class ImageViewer extends React.Component {
   componentDidMount() {
     window.addEventListener('keydown', this.handleKey);
@@ -72,6 +73,13 @@ class ImageViewer extends React.Component {
       this.props.refreshImage(this.props.data.getImage);
     };
   };
+  prefetchImage = ({ galleryId, token, pageNumber }) =>
+    this.props.client
+      .query({
+        query,
+        variables: { galleryId, token, pageNumber },
+      })
+      .then(({ data: { getImage: { fileUrl } } }) => !SERVER && this.preloadImage(fileUrl));
   render() {
     const { data, galleryToken, pageTotal, isPreview } = this.props;
     const { getImage: image = {}, loading, error } = data;
@@ -79,10 +87,12 @@ class ImageViewer extends React.Component {
     if (!SERVER && fileUrl) {
       this.preloadImage(fileUrl);
     }
-    if (nextImage && !SERVER) {
-      this.preloadImage(nextImage.fileUrl);
+    if (!SERVER && nextImage) {
+      this.prefetchImage(nextImage);
     }
-    const currentLink = image && `/gallery/${galleryId}/${galleryToken}/image/${image.token}/${image.id}/${pageTotal}`;
+    const currentLink =
+      image &&
+      `/gallery/${galleryId}/${galleryToken}/image/${image.token}/${image.id}/${pageTotal}`;
     const nextLink =
       nextImage &&
       `/gallery/${galleryId}/${galleryToken}/image/${nextImage.token}/${nextImage.id}/${pageTotal}`;

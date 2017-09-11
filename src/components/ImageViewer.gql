@@ -13,14 +13,12 @@ query Image($galleryId: Int!, $token: String!, $pageNumber: Int!) {
       galleryId
       token
       pageNumber
-      fileUrl
     }
     nextImage {
       id
       galleryId
       token
       pageNumber
-      fileUrl
     }
   }
 }
