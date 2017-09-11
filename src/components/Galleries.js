@@ -126,7 +126,8 @@ class Galleries extends React.Component {
     ];
     const docHeight = Math.max(...heights);
     const windowBottom = windowHeight + window.pageYOffset;
-    if (windowBottom >= docHeight) {
+
+    if (Math.ceil(windowBottom) >= Math.floor(docHeight)) {
       this.props.data.loadMoreEntries();
     }
   };
