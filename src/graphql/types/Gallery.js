@@ -5,7 +5,11 @@ import qs from 'qs';
 
 import { fetch, idTokenPageNumberFromImageUrl, categoryEnumQueryFieldMap } from '../utils';
 
+import db, { upsert } from '../db';
+
 import PageInfo from './PageInfo';
+
+const upsertGallery = object => upsert({ table: 'gallery', key: 'id', object });
 
 const galleryFilterCategoriesToQueryObject = R.reduce(
   (acc, cat) => ({ ...acc, [categoryEnumQueryFieldMap[cat]]: 1 }),
@@ -16,10 +20,11 @@ const galleryFilterToQueryString = ({ search = '', page = 0, category, categorie
   qs.stringify({
     page,
     f_search:
-      search &&
-      R.sortBy(R.identity)(
-        search.match(/(?=\S)[^"\s]*(?:"[^\\"]*(?:\\[\s\S][^\\"]*)*"[^"\s]*)*/g),
-      ).join(' '),
+      (search &&
+        R.sortBy(R.identity)(
+          search.match(/(?=\S)[^"\s]*(?:"[^\\"]*(?:\\[\s\S][^\\"]*)*"[^"\s]*)*/g),
+        ).join(' ')) ||
+      '',
     ...galleryFilterCategoriesToQueryObject(categories),
     f_apply: 'Apply Filter',
   });
@@ -202,7 +207,17 @@ const galleriesFetcher = galleryFilterQueryString =>
     });
 
 const galleryLoader = new DataLoader(
-  idTokenPairs => Promise.all(idTokenPairs.map(galleryFetcher)),
+  idTokenPairs =>
+    Promise.all(
+      idTokenPairs.map(idTokenPair =>
+        Promise.all([
+          galleryFetcher(idTokenPair),
+          db('gallery')
+            .where({ id: idTokenPair.id })
+            .first(),
+        ]).then(R.mergeAll),
+      ),
+    ),
   {
     cacheKeyFn: JSON.stringify,
   },
@@ -229,14 +244,18 @@ const Gallery = `
     url: String
     tags: [String]
     imagesPage(page: Int = 0): ImagesPage
+    dismissed: Boolean
   }
   type GalleriesPage {
     pageInfo: PageInfo
     galleries: [Gallery]
   }
   extend type Query {
-    getGalleries(search: String="", category: Category, categories: [Category], page: Int): GalleriesPage
+    getGalleries(search: String="", category: Category, categories: [Category], page: Int = 0): GalleriesPage
     getGallery(id: Int!, token: String!): Gallery
+  }
+  extend type Mutation {
+    dismissGallery(id: Int!, token: String!): Gallery
   }
 `;
 
@@ -244,11 +263,23 @@ export const resolvers = {
   Query: {
     getGalleries: (root, galleryFilter) =>
       galleriesLoader.load(galleryFilterToQueryString(galleryFilter)),
-    getGallery: (root, { id, token }) => galleryLoader.load({ id, token, page: 0 }),
+    getGallery: (root, { id, token }) => galleryLoader.load({ id, token }),
+  },
+  Mutation: {
+    dismissGallery: (root, { id, token }) =>
+      upsertGallery({ id, dismissed: true }).then(() =>
+        galleryLoader.clear({ id, token }).load({ id, token }),
+      ),
   },
   Gallery: {
     //    __typeName: (w,t,f,{ parentType })=>''+JSON.stringify(parentType),
     category: ({ category }) => category.replace('-', '').toUpperCase(),
+    dismissed: ({ id, dismissed }) =>
+      dismissed ||
+      db('gallery')
+        .where({ id })
+        .first('dismissed')
+        .then(row => row && row.dismissed),
     imagesPage: ({ id, token, imagesPage }, { page = 0 }) => {
       if (!page && imagesPage) {
         return imagesPage;

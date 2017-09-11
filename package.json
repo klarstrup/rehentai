@@ -90,6 +90,7 @@
     "ip": "^1.1.5",
     "isomorphic-fetch": "^2.2.1",
     "kcors": "^2.2.1",
+    "knex": "^0.13.0",
     "koa": "^2.3.0",
     "koa-bodyparser": "^4.2.0",
     "koa-helmet": "^3.2.0",
@@ -117,6 +118,7 @@
     "reset-css": "^2.2.1",
     "seamless-immutable": "^7.1.2",
     "spjaeld": "0.0.9",
+    "sqlite3": "^3.1.10",
     "url-search-params": "^0.10.0"
   },
   "engines": {
