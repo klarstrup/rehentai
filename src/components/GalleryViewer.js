@@ -115,9 +115,11 @@ class GalleryViewer extends React.Component {
     if (data.error) return <div>{data.error.message}</div>;
     if (!data.loading && !data.getGallery) return <div> No gallery found </div>;
     const {
+      id,
+      token,
+    } = this.props;
+    const {
       getGallery: {
-        id,
-        token,
         title,
         tags = [],
         thumbnailUrl,
@@ -126,7 +128,7 @@ class GalleryViewer extends React.Component {
       loading = false,
     } = data;
     const frontPage = images[0];
-    const isPreview = !imageId;
+    const isPreview = !imageId || !imageToken;
     const overlayStyle = isPreview ? { opacity: 1 } : {};
     const pageNumber = imageId ? imageId.split('-')[1] - 1 : 0;
     const tagsByNamespace = tags.reduce((accu, namespacedTag) => {
@@ -181,23 +183,12 @@ class GalleryViewer extends React.Component {
             </Link>
           </header>
         )}
-        {imageId && imageToken && id && token ? (
-          <ImageViewer
-            galleryId={id}
-            galleryToken={token}
-            token={imageToken}
-            pageNumber={pageNumber}
-            isPreview={isPreview}
-            pageTotal={total} />
-        ) : (
-          frontPage && (
-            <ImageViewer
-              {...frontPage}
-              isPreview={isPreview}
-              pageTotal={total}
-              galleryToken={token} />
-          )
-        )}
+        { !loading ? <ImageViewer
+          {...( isPreview ? frontPage : { token: imageToken, pageNumber })}
+          galleryId={+id}
+          galleryToken={token}
+          isPreview={isPreview}
+          pageTotal={total} /> : null}
         {loading ? (
           <footer style={{ ...overlayStyle }}>Loading...</footer>
         ) : (
