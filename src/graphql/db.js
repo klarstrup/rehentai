@@ -15,30 +15,18 @@ db.schema
 
 export default db;
 
-export const upsert = async ({ table, object, key }) => {
-  const preexistingRow = await db(table)
-    .where({ [key]: object[key] })
-    .first();
-  if (preexistingRow) {
-    const objectWithoutKey = R.dissoc('key', object);
-    const rowUpdateStatus = await db(table)
-      .where({ [key]: object[key] })
-      .update(objectWithoutKey);
-    if (rowUpdateStatus) {
-      const updatedRow = await db(table)
-        .where({ [key]: object[key] })
-        .first();
-      return updatedRow;
+export const upsert = ({ table, object, key }) =>
+  db.transaction(async trx => {
+    const selector = { [key]: object[key] };
+    const query = trx(table).where(selector);
+    if (await query.clone().first()) {
+      const objectWithoutKey = R.dissoc('key', object);
+      if (await query.clone().update(objectWithoutKey)) {
+        return query.clone().first();
+      }
     }
-    throw Error("Didn't manage to update for whatever reason.");
-  } else {
-    const rowInsertStatus = await db(table).insert(object);
-    if (rowInsertStatus) {
-      const insertedRow = await db(table)
-        .where({ [key]: object[key] })
-        .first();
-      return insertedRow;
+    if (await trx(table).insert(object)) {
+      return query.clone().first();
     }
-    throw Error("Didn't manage to insert for whatever reason.");
-  }
-};
+    return new Error('???');
+  });
