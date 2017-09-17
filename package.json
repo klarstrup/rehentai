@@ -117,6 +117,7 @@
     "regenerator-runtime": "^0.11.0",
     "reset-css": "^2.2.1",
     "seamless-immutable": "^7.1.2",
+    "serviceworker-webpack-plugin": "^0.2.3",
     "spjaeld": "0.0.9",
     "sqlite3": "^3.1.10",
     "url-search-params": "^0.10.0"

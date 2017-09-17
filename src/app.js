@@ -192,6 +192,21 @@ if (SERVER) {
   });
 }
 
+if (!SERVER) {
+  const runtime = require('serviceworker-webpack-plugin/lib/runtime');
+
+  if ('serviceWorker' in navigator) {
+    runtime
+      .register()
+      .then(() => {
+        console.log('Service Worker Registered');
+      })
+      .catch(error => {
+        console.error('Service Worker registration error: ', error);
+      });
+  }
+}
+
 // In app.js, we need to export the root component we want to mount as the
 // starting point to our app.  We'll just export the `<Main>` component.
 

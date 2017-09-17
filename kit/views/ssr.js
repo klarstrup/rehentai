@@ -16,6 +16,7 @@ const Html = ({ head, scripts, window, css, children }) => (
       <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
       <meta httpEquiv="Content-Language" content="en" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <link rel="manifest" href="/manifest.json" />
       {head.meta.toComponent()}
       <link rel="stylesheet" href={css} />
       {head.title.toComponent()}
