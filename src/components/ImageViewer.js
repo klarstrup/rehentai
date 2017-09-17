@@ -36,16 +36,22 @@ class ImageViewer extends React.Component {
     if (!image) {
       return;
     }
-    const { galleryId, nextImage, previousImage } = image;
+    const { galleryId, nextImage, previousImage, lastImage } = image;
     const galleryUrl = `/gallery/${galleryId}/${galleryToken}`;
     const currentImageUrl = image && `/image/${image.token}/${image.id}/${pageTotal}`;
     const nextImageUrl = nextImage && `/image/${nextImage.token}/${nextImage.id}/${pageTotal}`;
+    const lastImageUrl = lastImage && `/image/${lastImage.token}/${lastImage.id}/${pageTotal}`;
     const previousImageUrl =
       previousImage && `/image/${previousImage.token}/${previousImage.id}/${pageTotal}`;
+
+    const isLastPage = currentImageUrl === nextImageUrl;
+
     switch (code) {
       case 'ArrowLeft':
       case 'KeyA':
-        if (pageNumber === 0) {
+        if (isPreview) {
+          this.props.history.push(galleryUrl + lastImageUrl, this.props.location.state);
+        } else if (pageNumber === 0) {
           this.props.history.push(galleryUrl, this.props.location.state);
         } else {
           this.props.history.push(galleryUrl + previousImageUrl, this.props.location.state);
@@ -56,6 +62,8 @@ class ImageViewer extends React.Component {
       case 'KeyD':
         if (isPreview) {
           this.props.history.push(galleryUrl + currentImageUrl, this.props.location.state);
+        } else if (isLastPage) {
+          this.props.history.push(galleryUrl, this.props.location.state);
         } else {
           this.props.history.push(galleryUrl + nextImageUrl, this.props.location.state);
         }
@@ -68,6 +76,7 @@ class ImageViewer extends React.Component {
     const image = new Image();
     image.src = url;
     image.onload = e => console.log(`loaded ${url}`, JSON.stringify(e));
+
     image.onerror = e => {
       console.log(`failed ${url}`, JSON.stringify(e));
       this.props.refreshImage(this.props.data.getImage);
@@ -81,7 +90,7 @@ class ImageViewer extends React.Component {
       })
       .then(({ data: { getImage: { fileUrl } } }) => !SERVER && this.preloadImage(fileUrl));
   render() {
-    const { data, galleryToken, pageTotal, isPreview } = this.props;
+    const { data, galleryToken, pageTotal, isPreview, thumbnailUrl } = this.props;
     const { getImage: image = {}, loading, error } = data;
     const { fileUrl, galleryId, nextImage } = image;
     if (!SERVER && fileUrl) {
@@ -93,19 +102,22 @@ class ImageViewer extends React.Component {
     const currentLink =
       image &&
       `/gallery/${galleryId}/${galleryToken}/image/${image.token}/${image.id}/${pageTotal}`;
+    const indexLink = `/gallery/${galleryId}/${galleryToken}`;
     const nextLink =
       nextImage &&
       `/gallery/${galleryId}/${galleryToken}/image/${nextImage.token}/${nextImage.id}/${pageTotal}`;
+
+    const isLastPage = currentLink === nextLink;
 
     return (
       <div className={css.ImageViewer}>
         <Link
           to={{
-            pathname: isPreview ? currentLink : nextLink,
+            pathname: isPreview ? currentLink : isLastPage ? indexLink : nextLink,
             state: this.props.location.state,
           }}
           style={{
-            backgroundImage: `url(${fileUrl})`,
+            backgroundImage: `url(${fileUrl}), url(${thumbnailUrl})`,
           }}>
           {(error && error.message) ||
             (loading && !fileUrl && 'Loading') ||

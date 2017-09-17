@@ -114,15 +114,11 @@ class GalleryViewer extends React.Component {
     const { data, imageId, imageToken, location: { state: { search = '' } = {} } } = this.props;
     if (data.error) return <div>{data.error.message}</div>;
     if (!data.loading && !data.getGallery) return <div> No gallery found </div>;
-    const {
-      id,
-      token,
-    } = this.props;
+    const { id, token } = this.props;
     const {
       getGallery: {
         title,
         tags = [],
-        thumbnailUrl,
         imagesPage: { images = [], pageInfo: { total } = {} } = {},
       } = {},
       loading = false,
@@ -153,15 +149,14 @@ class GalleryViewer extends React.Component {
           <header style={{ ...overlayStyle }}>Loading...</header>
         ) : (
           <header style={{ ...overlayStyle }}>
-            <Link to={`/gallery/${id}/${token}`}>
-              <img src={thumbnailUrl} alt={frontPage.name} />
-            </Link>
             <div className={css.info}>
               <Link className={css['gallery-link']} to={`/gallery/${id}/${token}`}>
                 {title}
               </Link>
               {' | '}
-              <a href={`//exhentai.org/g/${id}/${token}`} target='_blank'><img src={ehFavicon} alt={'EH Logo'} /></a>
+              <a href={`//exhentai.org/g/${id}/${token}`} target="_blank">
+                <img src={ehFavicon} alt={'EH Logo'} />
+              </a>
               <hr />
               <div className={css.tags}>
                 {R.toPairs(tagsByNamespace).map(([namespace, tagsOfNamespace]) => (
@@ -183,19 +178,24 @@ class GalleryViewer extends React.Component {
             </Link>
           </header>
         )}
-        { !loading ? <ImageViewer
-          {...( isPreview ? frontPage : { token: imageToken, pageNumber })}
-          galleryId={+id}
-          galleryToken={token}
-          isPreview={isPreview}
-          pageTotal={total} /> : null}
+        {!loading ? (
+          <ImageViewer
+            {...(isPreview ? frontPage : { token: imageToken, pageNumber })}
+            galleryId={+id}
+            galleryToken={token}
+            isPreview={isPreview}
+            pageTotal={total}
+            thumbnailUrl={images[pageNumber] && images[pageNumber].thumbnailUrl} />
+        ) : null}
         {loading ? (
           <footer style={{ ...overlayStyle }}>Loading...</footer>
         ) : (
           <footer className={css['page-position']} style={{ ...overlayStyle }}>
             {(imageId && imageId.split('-')[1]) || frontPage.pageNumber || 1}/{total}
             {' | '}
-            <a href={`//exhentai.org/s/${imageToken}/${imageId}`} target='_blank'><img src={ehFavicon} alt={'EH Logo'}/></a>
+            <a href={`//exhentai.org/s/${imageToken}/${imageId}`} target="_blank">
+              <img src={ehFavicon} alt={'EH Logo'} />
+            </a>
             <ul
               style={{ display: 'flex', overflowX: 'scroll', overflowY: 'hidden', height: '150px' }}
               onScroll={this.handleScroll}

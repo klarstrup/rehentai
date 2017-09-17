@@ -27,14 +27,17 @@
       > .tags {
         display: flex;
         justify-content: space-evenly;
+        flex-wrap: wrap;
 
         > div {
           max-width: 40%;
+          padding-bottom: 4px;
 
           > header {
             padding-right: 4px;
           }
-          > ul > li {
+          > ul {
+            > li {
             display: inline-block;
             > a {
               display: inline-block;
@@ -49,14 +52,10 @@
             }
           }
         }
+        }
       }
     }
 
-    img {
-      max-height: auto;
-      max-width: 72px;
-      margin-right: 8px;
-    }
     .gallery-link {
       color: white;
       align-items: center;

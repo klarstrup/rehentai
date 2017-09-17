@@ -20,5 +20,11 @@ query Image($galleryId: Int!, $token: String!, $pageNumber: Int!) {
       token
       pageNumber
     }
+    lastImage {
+      id
+      galleryId
+      token
+      pageNumber
+    }
   }
 }
