@@ -4,7 +4,7 @@
 /* NPM */
 
 // Apollo client library
-import { createBatchingNetworkInterface, createNetworkInterface, ApolloClient } from 'react-apollo';
+import { createNetworkInterface, ApolloClient } from 'react-apollo';
 import { toIdValue } from 'apollo-client';
 
 /* ReactQL */
@@ -42,7 +42,7 @@ export function createClient(opt = {}) {
 
 // Wrap `createNetworkInterface` to attach middleware
 export function getNetworkInterface(uri) {
-  const networkInterface = createBatchingNetworkInterface({
+  const networkInterface = createNetworkInterface({
     uri,
     opts: config.apolloNetworkOptions,
   });
