@@ -25,7 +25,7 @@ class Front extends React.PureComponent {
   handleChange = event => {
     const search = event.target.value;
     this.setState({ search });
-    this.updateUrl(search.trim());
+    this.updateUrl(search);
   };
   updateUrl(search) {
     const urlSearch = new URLSearchParams(this.props.location.search).get('search');

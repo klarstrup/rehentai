@@ -73,7 +73,7 @@ class GalleriesItem extends React.Component {
   options: ({ search = '', categories = [] }) => ({
     variables: {
       page: 0,
-      search,
+      search: (search && search.trim()) || '',
       categories,
     },
   }),
