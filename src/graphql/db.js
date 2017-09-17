@@ -4,7 +4,7 @@ import R from 'ramda';
 
 const db = knex({
   dialect: 'sqlite3',
-  connection: { filename: './db.sqlite3' },
+  connection: { filename: 'db.sqlite3' },
 });
 db.schema
   .createTableIfNotExists('gallery', table => {
