@@ -1,6 +1,14 @@
 /* Regular @import url statements work as you'd expect them to -- alternatively
 you can import locally, and they wind up in the resulting bundle */
 @import '~reset-css/reset.css';
+@keyframes fadeIn {
+  0% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
 
 body {
   margin: 0;
@@ -13,6 +21,7 @@ body {
   ); /* w3c */
   background-size: 100%;
   background-attachment: fixed;
+  animation: fadeIn .3s ease-in forwards;
   font-weight: normal;
   height: 100%;
 }

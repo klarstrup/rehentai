@@ -4,6 +4,16 @@ $thumbnail-height: 250px;
   thumbnailHeight: $thumbnail-height;
 }
 
+.loading {
+  opacity: 0.5;
+  transition: all .3s ease;
+}
+
+.loaded {
+  opacity: 1;
+  transition: all .3s ease;
+}
+
 .galleries {
   display: flex;
   flex-flow: row wrap;

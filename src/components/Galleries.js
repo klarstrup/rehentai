@@ -139,11 +139,14 @@ class Galleries extends React.Component {
     if (loading && !galleries) return <div> Loading... </div>;
     const dismissedCount = galleries.filter(R.prop('dismissed')).length;
     return [
-      <div className={css.pageInfo} key={0}>
-        {total && `${total} results, ${galleries.length - dismissedCount} shown`}{dismissedCount ? `, ${dismissedCount} dismissed` : ''}
+      <div className={`${css.pageInfo} ${loading ? css.loading : css.loaded}`} key={0}>
+        {total && <span>
+          <span className={loading ? css.loading : css.loaded}>{total}</span> results,
+          <span className={loading ? css.loading : css.loaded}>{galleries.length - dismissedCount}</span> shown{dismissedCount ? `, ${dismissedCount} dismissed` : ''}
+        </span>}
       </div>,
       <hr key={1} />,
-      <div className={css.galleries} key={2}>
+      <div className={`${css.galleries} ${loading ? css.loading : css.loaded}`} key={2}>
         {galleries.map(gallery => <GalleriesItem key={gallery.id} {...gallery} search={search} />)}
       </div>,
     ];
