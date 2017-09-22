@@ -16,6 +16,7 @@ immutability, to prevent weird side effects.
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import Immutable from 'seamless-immutable';
+import persistState from 'redux-localstorage';
 
 /* Local */
 import config from 'kit/config';
@@ -73,6 +74,7 @@ export default function createNewStore(apolloClient) {
       ...unwind(false),
     },
     compose(
+      !SERVER ? persistState() : f => f,
       applyMiddleware(
         apolloClient.middleware(),
         thunkMiddleware,
