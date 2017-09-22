@@ -96,10 +96,10 @@ class GalleriesItem extends React.Component {
               return {
                 getGalleries: {
                   ...fetchMoreResult.getGalleries,
-                  galleries: [
+                  galleries: R.uniqBy(R.prop('id'), [
                     ...previousResult.getGalleries.galleries,
                     ...fetchMoreResult.getGalleries.galleries,
-                  ],
+                  ]),
                 },
               };
             },
