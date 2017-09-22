@@ -223,8 +223,9 @@ const galleryLoader = new DataLoader(
   },
 );
 
-const galleriesLoader = new DataLoader(queryStrings =>
-  Promise.all(queryStrings.map(galleriesFetcher)),
+const galleriesLoader = new DataLoader(
+  queryStrings => Promise.all(queryStrings.map(galleriesFetcher)),
+  { cache: false },
 );
 
 const Gallery = `
