@@ -76,6 +76,7 @@ class GalleriesItem extends React.Component {
       search: (search && search.trim()) || '',
       categories,
     },
+    fetchPolicy: 'cache-and-network',
   }),
   props(props) {
     return {
