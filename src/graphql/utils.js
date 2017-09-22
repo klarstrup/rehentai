@@ -1,4 +1,4 @@
-import nodeFetch from 'node-fetch';
+import fetchRetry from 'fetch-retry';
 import spjaeld from 'spjaeld';
 import R from 'ramda';
 
@@ -18,7 +18,7 @@ const cookieStringFromObject = R.compose(R.join('; '), R.map(R.join('=')), R.toP
 
 export const fetch = spjaeld(async (url, options = {}) => {
   const start = new Date();
-  const result = await nodeFetch(url, {
+  const result = await fetchRetry(url, {
     credentials: 'include',
     ...options,
     headers: {
