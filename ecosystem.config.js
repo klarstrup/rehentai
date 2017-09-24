@@ -7,7 +7,7 @@ module.exports = {
     // First application
     {
       name: 'Re-Hentai Sever',
-      script: 'build/server.js',
+      script: 'dist/server.js',
       env: {
         HOST: 'h.klarstrup.dk',
       },
