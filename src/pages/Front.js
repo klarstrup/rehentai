@@ -50,7 +50,7 @@ class Front extends React.PureComponent {
             },
           ]} />
         <input type="text" value={this.state.search} onChange={this.handleChange} />
-        <Galleries search={search} categories={['DOUJINSHI', 'MANGA', 'WESTERN']} />
+        <Galleries search={search} categories={['NON-H']} />
       </section>
     );
   }
