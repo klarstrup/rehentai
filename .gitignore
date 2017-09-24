@@ -44,4 +44,3 @@ dist
 
 # dotenv environment variables file
 .env
-ecosystem.config.js
