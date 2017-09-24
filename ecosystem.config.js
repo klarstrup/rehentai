@@ -23,6 +23,7 @@ module.exports = {
    */
   deploy: {
     production: {
+      interpreter: 'node@8.5.0',
       key: 'C:/Users/Klarstrup/.ssh/github_rsa',
       user: 'root',
       host: '46.101.225.235',
