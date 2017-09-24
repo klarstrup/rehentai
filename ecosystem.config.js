@@ -12,7 +12,6 @@ module.exports = {
         HOST: 'h.klarstrup.dk',
       },
       env_production: {
-        HOST: 'h.klarstrup.dk',
         NODE_ENV: 'production',
       },
     },
