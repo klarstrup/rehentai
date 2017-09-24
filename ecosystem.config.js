@@ -32,7 +32,7 @@ module.exports = {
       repo: 'git@github.com:klarstrup/rehentai.git',
       path: '/var/www/h.klarstrup.dk',
       ssh_options: ['StrictHostKeyChecking=no', 'PasswordAuthentication=no'],
-      'post-deploy': 'yarn install --ignore-engines && yarn build && /root/.nvm/versions/node/v8.5.0/bin/pm2 reload ecosystem.config.js --env production',
+      'post-deploy': 'yarn install && yarn build && pm2 reload ecosystem.config.js --env production',
     },
   },
 };
