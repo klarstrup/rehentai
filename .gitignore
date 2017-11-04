@@ -41,6 +41,3 @@ jspm_packages
 
 # Distribution
 dist
-
-# dotenv environment variables file
-.env

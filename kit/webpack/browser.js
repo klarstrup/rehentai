@@ -12,7 +12,6 @@ import path from 'path';
 /* NPM */
 import webpack from 'webpack';
 import WebpackConfig from 'webpack-config';
-import ServiceWorkerWebpackPlugin from 'serviceworker-webpack-plugin';
 
 /* Local */
 

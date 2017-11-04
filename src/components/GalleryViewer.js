@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { graphql } from 'react-apollo';
 import { Link, withRouter } from 'react-router-dom';
@@ -231,5 +232,9 @@ class GalleryViewer extends React.Component {
     );
   }
 }
+
+GalleryViewer.propTypes = {
+  token: PropTypes.string.isRequired,
+};
 
 export default GalleryViewer;

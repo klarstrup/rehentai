@@ -15,7 +15,7 @@ import chalk from 'chalk';
 
 // RegExp for file types
 export const regex = {
-  fonts: /\.(woff|woff2|ttf|eot)$/i,
+  fonts: /\.(woff|woff2|(o|t)tf|eot)$/i,
   images: /\.(jpe?g|png|gif|svg)$/i,
 };
 
@@ -121,6 +121,7 @@ export const css = {
                 ...loader.use,
               ],
               fallback: 'style-loader',
+              publicPath: '../../',
             }),
           };
         }
@@ -151,12 +152,8 @@ export const stats = {
   chunksSort: 'field',
   // `webpack --colors` equivalent
   colors: true,
-  // Display the distance from the entry point for each module
-  depth: false,
   // Display the entry points with the corresponding bundles
   entrypoints: false,
-  // Add errors
-  errors: true,
   // Add details to errors (like resolving log)
   errorDetails: true,
   // Exclude modules which match one of the given strings or regular expressions
@@ -171,8 +168,6 @@ export const stats = {
   modulesSort: 'field',
   // Show dependencies and origin of warnings/errors (since webpack 2.5.0)
   moduleTrace: false,
-  // Show performance hint when file size exceeds `performance.maxAssetSize`
-  performance: true,
   // Show the exports of the modules
   providedExports: false,
   // Add public path information
@@ -185,8 +180,6 @@ export const stats = {
   usedExports: false,
   // Add webpack version information
   version: false,
-  // Add warnings
-  warnings: true,
 };
 
 // Return a new Webpack plugin that shows a progress bar of what is being

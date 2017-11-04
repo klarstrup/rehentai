@@ -20,7 +20,7 @@ import { getServerURL } from 'kit/lib/env';
 const dataIdFromObject = ({ __typename, id }) => __typename && id && `${__typename}:${id}`;
 
 // Helper function to create a new Apollo client, by merging in
-// passed options alongside any set by `config.setApolloOptions` and defaults
+// passed options alongside any set by `config.setApolloClientOptions` and defaults
 export function createClient(opt = {}) {
   return new ApolloClient(Object.assign({
     reduxRootSelector: state => state.apollo,
@@ -41,10 +41,10 @@ export function createClient(opt = {}) {
 }
 
 // Wrap `createNetworkInterface` to attach middleware
-export function getNetworkInterface(uri) {
+export function getNetworkInterface(uri, opt) {
   const networkInterface = createNetworkInterface({
     uri,
-    opts: config.apolloNetworkOptions,
+    opts: Object.assign({}, config.apolloNetworkOptions, opt),
   });
 
   // Attach middleware
