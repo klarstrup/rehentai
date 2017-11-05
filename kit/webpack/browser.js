@@ -83,9 +83,9 @@ export default new WebpackConfig().extend('[root]/base.js').merge({
   },
 
   plugins: [
-    new ServiceWorkerWebpackPlugin({
-      entry: path.join(PATHS.src, 'service-worker.js'),
-    }),
+//    new ServiceWorkerWebpackPlugin({
+//      entry: path.join(PATHS.src, 'service-worker.js'),
+//    }),
     // Separate our third-party/vendor modules into a separate chunk, so that
     // we can load them independently of our app-specific code changes
     new webpack.optimize.CommonsChunkPlugin({

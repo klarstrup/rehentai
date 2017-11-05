@@ -192,6 +192,7 @@ if (SERVER) {
   });
 }
 
+/*
 if (!SERVER) {
   const runtime = require('serviceworker-webpack-plugin/lib/runtime');
 
@@ -206,6 +207,7 @@ if (!SERVER) {
       });
   }
 }
+*/
 
 // In app.js, we need to export the root component we want to mount as the
 // starting point to our app.  We'll just export the `<Main>` component.
