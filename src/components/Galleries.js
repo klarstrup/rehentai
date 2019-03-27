@@ -26,7 +26,8 @@ class GalleriesItem extends React.Component {
       client,
     } = this.props;
 
-    const heightNormalizationRatio = css.thumbnailHeight.split('px')[0] / thumbnailHeight;
+    const heightNormalizationRatio =
+      css.thumbnailHeight.split('px')[0] / thumbnailHeight;
     const shortTitle = title
       .replace(/{.*?}/g, '')
       .replace(/\[.*?\]/g, '')
@@ -53,14 +54,16 @@ class GalleriesItem extends React.Component {
         style={{
           width: thumbnailWidth * heightNormalizationRatio,
           display: dismissed && 'none',
-        }}>
+        }}
+      >
         <img
           alt={title}
           src={thumbnailUrl}
           style={stateStyle}
           className={favorite ? css.favorite : ''}
           onLoad={this.handleImageLoaded}
-          onError={this.handleImageErrored} />
+          onError={this.handleImageErrored}
+        />
         <div className={css['gallery-title']} style={stateStyle}>
           {shorterTitle}
         </div>
@@ -116,7 +119,8 @@ class Galleries extends React.Component {
     window.removeEventListener('scroll', this.handleScroll);
   }
   handleScroll = () => {
-    const windowHeight = window.innerHeight || document.documentElement.offsetHeight;
+    const windowHeight =
+      window.innerHeight || document.documentElement.offsetHeight;
     const { body, documentElement } = document;
     const heights = [
       body.scrollHeight,
@@ -134,21 +138,38 @@ class Galleries extends React.Component {
   };
   render() {
     const {
-      data: { loading, getGalleries: { galleries = [], pageInfo: { total } = {} } = {} },
+      data: {
+        loading,
+        getGalleries: { galleries = [], pageInfo: { total } = {} } = {},
+      },
       search,
     } = this.props;
     if (loading && !galleries) return <div> Loading... </div>;
     const dismissedCount = galleries.filter(R.prop('dismissed')).length;
     return [
-      <div className={`${css.pageInfo} ${loading ? css.loading : css.loaded}`} key={0}>
-        {total && <span>
-          <span className={loading ? css.loading : css.loaded}>{total}</span> results,
-          <span className={loading ? css.loading : css.loaded}>{galleries.length - dismissedCount}</span> shown{dismissedCount ? `, ${dismissedCount} dismissed` : ''}
-        </span>}
+      <div
+        className={`${css.pageInfo} ${loading ? css.loading : css.loaded}`}
+        key={0}
+      >
+        {total && (
+          <span>
+            <span className={loading ? css.loading : css.loaded}>{total}</span>{' '}
+            results,
+            <span className={loading ? css.loading : css.loaded}>
+              {galleries.length - dismissedCount}
+            </span>{' '}
+            shown{dismissedCount ? `, ${dismissedCount} dismissed` : ''}
+          </span>
+        )}
       </div>,
       <hr key={1} />,
-      <div className={`${css.galleries} ${loading ? css.loading : css.loaded}`} key={2}>
-        {galleries.map(gallery => <GalleriesItem key={gallery.id} {...gallery} search={search} />)}
+      <div
+        className={`${css.galleries} ${loading ? css.loading : css.loaded}`}
+        key={2}
+      >
+        {galleries.map(gallery => (
+          <GalleriesItem key={gallery.id} {...gallery} search={search} />
+        ))}
       </div>,
     ];
   }

@@ -3,7 +3,11 @@ import cheerio from 'cheerio';
 import R from 'ramda';
 import qs from 'qs';
 
-import { fetch, idTokenPageNumberFromImageUrl, categoryEnumQueryFieldMap } from '../utils';
+import {
+  fetch,
+  idTokenPageNumberFromImageUrl,
+  categoryEnumQueryFieldMap,
+} from '../utils';
 
 import db, { upsert } from '../db';
 
@@ -16,13 +20,20 @@ const galleryFilterCategoriesToQueryObject = R.reduce(
   {},
 );
 
-const galleryFilterToQueryString = ({ search = '', page = 0, category, categories = [category] }) =>
+const galleryFilterToQueryString = ({
+  search = '',
+  page = 0,
+  category,
+  categories = [category],
+}) =>
   qs.stringify({
     page,
     f_search:
       (search &&
         R.sortBy(R.identity)(
-          search.match(/(?=\S)[^"\s]*(?:"[^\\"]*(?:\\[\s\S][^\\"]*)*"[^"\s]*)*/g),
+          search.match(
+            /(?=\S)[^"\s]*(?:"[^\\"]*(?:\\[\s\S][^\\"]*)*"[^"\s]*)*/g,
+          ),
         ).join(' ')) ||
       '',
     ...galleryFilterCategoriesToQueryObject(categories),
@@ -54,7 +65,11 @@ const galleryFetcher = ({ id, token, page = 0 }) =>
     res.text().then(html => {
       const $ = cheerio.load(html);
 
-      if (html.indexOf('<p>This gallery has been removed or is unavailable.</p>') > 0) {
+      if (
+        html.indexOf(
+          '<p>This gallery has been removed or is unavailable.</p>',
+        ) > 0
+      ) {
         throw new Error('EH: This gallery has been removed or is unavailable.');
       }
 
@@ -81,11 +96,9 @@ const galleryFetcher = ({ id, token, page = 0 }) =>
         uploader: $('a', '#gdn')
           .first()
           .text(),
-        category: $('a', '#gdc')
+        category: $('.cta', '#gdc')
           .first()
-          .attr('href')
-          .split('/')
-          .slice(-1)[0],
+          .text(),
         published: Date.parse(
           `${$('.gdt2')
             .first()
@@ -109,6 +122,7 @@ const galleryFetcher = ({ id, token, page = 0 }) =>
             ...idTokenPageNumberFromImageUrl($(el).attr('href')),
             url: $(el).attr('href'),
             thumbnailUrl: $('img', el)
+              .first()
               .attr('src')
               .replace('exhentai', 'ehgt'),
             name: $('img', el)
@@ -120,9 +134,39 @@ const galleryFetcher = ({ id, token, page = 0 }) =>
     }),
   );
 
+function load_pane_image(b) {
+  if (b !== undefined) {
+    const a = b.innerHTML.split('~', 4);
+    if (a.length == 4) {
+      if (a[0] == 'init') {
+        b.innerHTML =
+          '<img src="http://' +
+          a[1] +
+          '/' +
+          a[2] +
+          '" alt="' +
+          a[3] +
+          '" style="margin:0" />';
+      } else {
+        if (a[0] == 'inits') {
+          b.innerHTML =
+            '<img src="https://' +
+            a[1] +
+            '/' +
+            a[2] +
+            '" alt="' +
+            a[3] +
+            '" style="margin:0" />';
+        }
+      }
+    }
+  }
+}
+
 const galleriesFetcher = galleryFilterQueryString =>
   fetch(`http://exhentai.org/?${galleryFilterQueryString}`)
     .then(res => res.text())
+    //    .then(res => console.log(res) || res)
     .then(html => {
       const $ = cheerio.load(html);
 
@@ -139,22 +183,21 @@ const galleriesFetcher = galleryFilterQueryString =>
         };
       }
 
-      const count =
-        1 +
-        $('.ip')
-          .first()
-          .text()
-          .split(' ')[1]
-          .split('-')
-          .reduce((acc, val) => val - acc);
+      const count = $('.itg')
+        .first()
+        .find('tr')
+        .slice(1).length;
       const total = +$('.ip')
         .first()
         .text()
         .split(' ')
-        .slice(-1)[0]
+        .slice(-2)[0]
         .replace(',', '');
       const perPage = 25;
-      const page = $('.ptds', '.ptt').text() - 1;
+      const page =
+        $('.ptds', '.ptt')
+          .find('a')
+          .text() - 1;
 
       return {
         pageInfo: {
@@ -166,41 +209,56 @@ const galleriesFetcher = galleryFilterQueryString =>
           hasPrevPage: page > 0,
         },
         galleries:
-          $('tr[class]', '.itg')
+          $('.itg')
+            .first()
+            .find('tr')
+            .slice(1)
             .map((i, el) => ({
-              id: $('.it2', el)
-                .attr('id')
-                .substr(1),
-              token: $('a[onmouseover]', el)
+              id: $('.glname', el)
+                .find('a')
+                .first()
                 .attr('href')
-                .split('/')[5],
-              category: $('img', el)
+                .split('/')
+                .slice(-3)[0],
+              token: $('a', el)
                 .first()
-                .attr('alt'),
-              title: $('.it5', el).text(),
-              uploader: $('.itu', el).text(),
-              url: $('a[onmouseover]', el).attr('href'),
-              favorite: $('.i[id]', el).attr('title') || null,
-              thumbnailUrl: ($('.it2', el)
-                .children('img')
+                .attr('href')
+                .split('/')
+                .slice(-2)[0],
+              category: $('.cta', el)
                 .first()
-                .attr('src') ||
-                `https://exhentai.org/${$('.it2', el)
-                  .text()
-                  .split('~')[2]}`)
+                .text(),
+              title: $('.glname', el)
+                .find('a')
+                .text(),
+              uploader: $('a', el)
+                .last()
+                .text(),
+              url: $('.glname', el)
+                .find('a')
+                .attr('href'),
+              favorite:
+                $('[title="Favorites 0"]', el)
+                  .first()
+                  .attr('title') || null,
+              thumbnailUrl: $('.glthumb', el)
+                .find('img')
+                .attr('src')
                 .replace('exhentai', 'ehgt'),
-              thumbnailHeight: $('.it2', el)
+              thumbnailHeight: $('.glthumb', el)
                 .css('height')
                 .split('px')[0],
-              thumbnailWidth: $('.it2', el)
+              thumbnailWidth: $('.glthumb', el)
                 .css('width')
                 .split('px')[0],
-              published: Date.parse(
+              published: new Date(
                 `${$('.itd', el)
                   .first()
                   .text()} EDT`,
               ),
-              stars: backgroundPositionToStars($('.it4r', el).css('background-position')),
+              stars: backgroundPositionToStars(
+                $('.ir', el).css('background-position'),
+              ),
             }))
             .get() || [],
       };
@@ -274,7 +332,11 @@ export const resolvers = {
   },
   Gallery: {
     //    __typeName: (w,t,f,{ parentType })=>''+JSON.stringify(parentType),
-    category: ({ category }) => category.replace('-', '').toUpperCase(),
+    category: ({ category }) =>
+      (category || '')
+        .replace('-', '')
+        .toUpperCase()
+        .trim() || null,
     dismissed: ({ id, dismissed }) =>
       dismissed ||
       db('gallery')
@@ -287,7 +349,8 @@ export const resolvers = {
       }
       return galleryLoader.load({ id, token, page }).then(R.prop('imagesPage'));
     },
-    tags: ({ id, token, tags }) => tags || galleryLoader.load({ id, token }).then(R.prop('tags')),
+    tags: ({ id, token, tags }) =>
+      tags || galleryLoader.load({ id, token }).then(R.prop('tags')),
   },
 };
 

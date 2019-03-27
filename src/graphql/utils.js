@@ -2,7 +2,11 @@ import fetchRetry from 'fetch-retry';
 import spjaeld from 'spjaeld';
 import R from 'ramda';
 
-const uconfigFromObject = R.compose(R.join('-'), R.map(R.join('_')), R.toPairs);
+const uconfigFromObject = R.compose(
+  R.join('-'),
+  R.map(R.join('_')),
+  R.toPairs,
+);
 
 export const globalCookies = {
   nw: 1,
@@ -11,10 +15,16 @@ export const globalCookies = {
     pn: '1', // Show gallery page numbers: Yes
     ts: 'l', // Large gallery thumbnails
   }),
+  lv: '1549333029-1550366718',
   s: '582183e83',
+  sk: 'k7cpr91rgf6cmsuudhy418zvj7oa',
 };
 
-const cookieStringFromObject = R.compose(R.join('; '), R.map(R.join('=')), R.toPairs);
+const cookieStringFromObject = R.compose(
+  R.join('; '),
+  R.map(R.join('=')),
+  R.toPairs,
+);
 
 export const fetch = spjaeld(async (url, options = {}) => {
   const start = new Date();
