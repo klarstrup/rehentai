@@ -216,12 +216,11 @@ const galleriesFetcher = galleryFilterQueryString =>
             .map((i, el) => ({
               id: $('.glname', el)
                 .find('a')
-                .first()
                 .attr('href')
                 .split('/')
                 .slice(-3)[0],
-              token: $('a', el)
-                .first()
+              token: $('.glname', el)
+                .find('a')
                 .attr('href')
                 .split('/')
                 .slice(-2)[0],
